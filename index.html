@@ -156,6 +156,7 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
 .finish p{margin:0;font-size:19px;font-weight:600;color:var(--text2);max-width:460px}
 .finish .bee-wrap{width:200px;height:182px;position:static}
 .drops{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:320px}
+.cert{width:100%;max-width:640px;border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--honey);margin-top:10px;background:#fff}
 .drops svg{width:30px;height:34px;animation:pop .5s backwards}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .confetti i{position:absolute;top:-30px;width:16px;height:18px;background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:fall linear forwards}
@@ -215,7 +216,13 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
       <h2>Queen Cynthia!</h2>
       <p>Every cell is full of honey. You know Claude now. Go make something beautiful.</p>
       <div class="drops" id="drops"></div>
-      <button class="btn" id="qhome">Back to the hive</button>
+      <img class="cert" id="certimg" alt="Certificate: Cynthia completed Course 1">
+      <div class="actions" style="justify-content:center;margin-top:4px">
+        <button class="btn sm" id="certsave">Save certificate</button>
+        <a class="btn ghost sm" id="certsend" href="#" style="display:none" target="_blank" rel="noopener">Send it to Tarek</a>
+      </div>
+      <p style="font-size:15px" id="certhint">Save it, then send it to Tarek. That unlocks Course 2.</p>
+      <button class="link" id="qhome">Back to the hive</button>
     </div>
   </section>
 </div>
@@ -587,7 +594,59 @@ function showQueen(){
   show('queen'); $('qbee').innerHTML=bee('queen','q');
   $('drops').innerHTML=Array.from({length:9},(_,i)=>drop.replace('<svg',`<svg style="animation-delay:${i*0.1}s"`)).join('');
   confetti(120);
+  makeCertificate();
 }
+
+/* ---------- certificate ---------- */
+let certBlob=null;
+function hexPath(ctx,x,y,r){ ctx.beginPath(); for(let i=0;i<6;i++){ const a=Math.PI/180*(60*i-90); const px=x+r*Math.cos(a), py=y+r*Math.sin(a); i?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); }
+function svgImage(svg){ return new Promise(res=>{ const img=new Image(); const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'})); img.onload=()=>{URL.revokeObjectURL(url);res(img);}; img.onerror=()=>res(null); img.src=url; }); }
+async function makeCertificate(){
+  const W=1200,H=850; const c=document.createElement('canvas'); c.width=W*2; c.height=H*2; const ctx=c.getContext('2d'); ctx.scale(2,2);
+  try{ await document.fonts.load("700 80px Fredoka"); await document.fonts.load("800 24px Nunito"); }catch(e){}
+  const ink='#1F1A17', honey='#FFC72C', soft='#FFF3C4';
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  // soft hex decor, clipped inside the frame
+  ctx.save(); ctx.beginPath(); ctx.roundRect(56,56,W-112,H-112,26); ctx.clip();
+  ctx.fillStyle=soft; [[90,80,110],[1110,80,110],[1110,770,110],[90,770,110]].forEach(([x,y,r])=>{hexPath(ctx,x,y,r);ctx.fill();});
+  ctx.restore();
+  // frame
+  ctx.strokeStyle=ink; ctx.lineWidth=6; ctx.beginPath(); ctx.roundRect(40,40,W-80,H-80,36); ctx.stroke();
+  ctx.strokeStyle=honey; ctx.lineWidth=4; ctx.beginPath(); ctx.roundRect(56,56,W-112,H-112,26); ctx.stroke();
+  // text
+  ctx.fillStyle=ink; ctx.textAlign='center';
+  ctx.font="800 20px Nunito, Arial, sans-serif"; ctx.letterSpacing='4px'; ctx.fillText('CERTIFICATE OF HONEY', W/2, 140); ctx.letterSpacing='0px';
+  ctx.font="700 76px Fredoka, Arial, sans-serif"; ctx.fillText('Cynthia', W/2, 250);
+  ctx.font="700 34px Fredoka, Arial, sans-serif"; ctx.fillText('is officially Queen of the Hive', W/2, 305);
+  ctx.font="800 22px Nunito, Arial, sans-serif"; ctx.fillStyle='#4A443F';
+  ctx.fillText('for completing Course 1, Cynthia and the Hive:', W/2, 365);
+  ctx.fillText('all 9 cells, every quiz, no bees harmed.', W/2, 398);
+  // honey badge
+  hexPath(ctx,W/2,540,92); ctx.fillStyle=honey; ctx.fill(); ctx.strokeStyle=ink; ctx.lineWidth=6; ctx.stroke();
+  ctx.fillStyle=ink; ctx.font="700 54px Fredoka, Arial, sans-serif"; ctx.fillText(String(state.honey), W/2, 548);
+  ctx.font="800 16px Nunito, Arial, sans-serif"; ctx.letterSpacing='2px'; ctx.fillText('HONEY DROPS', W/2, 580); ctx.letterSpacing='0px';
+  // bee
+  const img=await svgImage(bee('queen','cert').replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('width="100%" height="100%"','width="320" height="290"'));
+  if(img){ ctx.drawImage(img, 150, 420, 320, 290); }
+  // date + signature
+  const d=new Date(); const date=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  ctx.fillStyle='#4A443F'; ctx.font="800 20px Nunito, Arial, sans-serif";
+  ctx.textAlign='left'; ctx.fillText('Date', 160, 735); ctx.fillStyle=ink; ctx.font="700 28px Fredoka, Arial, sans-serif"; ctx.fillText(date, 160, 770);
+  ctx.textAlign='right'; ctx.fillStyle='#4A443F'; ctx.font="800 20px Nunito, Arial, sans-serif"; ctx.fillText('Head beekeeper', W-160, 735); ctx.fillStyle=ink; ctx.font="700 28px Fredoka, Arial, sans-serif"; ctx.fillText(HELPER_NAME, W-160, 770);
+  ctx.textAlign='center'; ctx.fillStyle='#7A736C'; ctx.font="800 14px Nunito, Arial, sans-serif"; ctx.fillText('Code HIVE-1-'+String(state.honey).padStart(3,'0')+' · cynthia-hive.vercel.app', W/2, 780);
+  const url=c.toDataURL('image/png'); $('certimg').src=url;
+  certBlob=await new Promise(r=>c.toBlob(r,'image/png'));
+  if(HELPER_WHATSAPP){ const a=$('certsend'); a.style.display='inline-flex'; a.href='https://wa.me/'+HELPER_WHATSAPP+'?text='+encodeURIComponent('I finished Course 1 of the Hive! Honey: '+state.honey+'. Certificate attached.'); }
+}
+$('certsave').onclick=async()=>{
+  if(!certBlob){ toast('One second, still drawing'); return; }
+  const file=new File([certBlob],'cynthia-hive-certificate.png',{type:'image/png'});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:'Cynthia and the Hive certificate'}); return; }
+  }catch(e){ if(e&&e.name==='AbortError') return; }
+  try{ const a=document.createElement('a'); a.href=URL.createObjectURL(certBlob); a.download='cynthia-hive-certificate.png'; document.body.appendChild(a); a.click(); a.remove(); toast('Saved. Check your Downloads or Photos.'); }
+  catch(e){ toast('Hold your finger on the certificate and tap Save Image'); }
+};
 function confetti(n){
   const c=$('confetti');
   for(let i=0;i<n;i++){ const p=document.createElement('i'); p.style.left=Math.random()*100+'%'; p.style.animationDuration=(1.8+Math.random()*1.6)+'s'; p.style.animationDelay=(Math.random()*.6)+'s'; p.style.background=Math.random()<.3?'#1F1A17':'#FFC72C'; p.style.transform=`scale(${.6+Math.random()*.8})`; c.appendChild(p); setTimeout(()=>p.remove(),4000); }
