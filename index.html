@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cynthia and the Hive</title>
-<meta name="description" content="Course 1. Learn Claude, one honeycomb cell at a time.">
+<meta name="description" content="Learn Claude, one honeycomb cell at a time. Two courses, one bee.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cynthia and the Hive">
-<meta property="og:description" content="Course 1. Learn Claude, one honeycomb cell at a time.">
+<meta property="og:description" content="Learn Claude, one honeycomb cell at a time. Two courses, one bee.">
 <meta property="og:url" content="https://cynthia-hive.vercel.app/">
 <meta property="og:image" content="https://cynthia-hive.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
@@ -157,6 +157,21 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
 .finish .bee-wrap{width:200px;height:182px;position:static}
 .drops{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:320px}
 .cert{width:100%;max-width:640px;border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--honey);margin-top:10px;background:#fff}
+.certbtn{background:#fff}
+.certbtn svg{width:18px;height:18px}
+.tabs{display:flex;gap:8px;margin-top:26px}
+.tab{border:3px solid var(--ink);background:#fff;border-radius:999px;padding:8px 16px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px;min-height:44px}
+.tab.on{background:var(--honey)}
+.tab:disabled{opacity:.5}
+.tab svg{width:14px;height:14px}
+.comb-title{margin-top:14px}
+.certlist{display:flex;flex-direction:column;gap:14px;margin-top:20px}
+.certcard{display:flex;align-items:center;gap:14px;border:3px solid var(--ink);border-radius:18px;padding:14px 16px;background:#fff;box-shadow:4px 4px 0 var(--honey)}
+.certcard .hx{width:52px;height:60px;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--honey)}
+.certcard .meta{flex:1;min-width:0}
+.certcard .meta b{display:block;font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px}
+.certcard .meta span{font-size:13px;font-weight:700;color:var(--grey)}
+.empty{text-align:center;color:var(--grey);font-weight:700;margin-top:30px;font-size:16px}
 .drops svg{width:30px;height:34px;animation:pop .5s backwards}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .confetti i{position:absolute;top:-30px;width:16px;height:18px;background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:fall linear forwards}
@@ -172,6 +187,7 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
     </button>
     <div class="stats" aria-live="polite">
       <div class="pill"><div class="bar"><i id="barfill" style="width:0%"></i></div><span id="score">0 / 9</span></div>
+      <button class="pill certbtn" id="certsbtn" aria-label="My certificates"><svg viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5 7 22l5-3 5 3-1.5-7.5"/></svg><span id="certcount">0</span></button>
       <div class="pill honeyp" id="honeypill" title="Honey drops"><svg viewBox="-3 -3 36 40" aria-hidden="true"><path d="M15 2 C15 2 3 16 3 22 a12 12 0 0 0 24 0 C27 16 15 2 15 2Z" fill="#FFC72C" stroke="#1F1A17" stroke-width="3" stroke-linejoin="round"/></svg><span id="honey">0</span></div>
     </div>
   </header>
@@ -181,7 +197,7 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
     <div class="hero">
       <div class="bee-hero" id="homebee"></div>
       <div class="txt">
-        <span class="tag dark">Course 1 · Made for Cynthia</span>
+        <span class="tag dark" id="coursetag">Course 1 · Made for Cynthia</span>
         <h1 id="hello">Hi Cynthia!</h1>
         <p id="hellotxt">Let's learn Claude together. One honeycomb cell at a time, no tech talk, lots of costumes.</p>
         <button class="btn" id="startbtn">Start buzzing
@@ -189,7 +205,8 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
         </button>
       </div>
     </div>
-    <h2 class="comb-title">Your honeycomb <small>9 cells</small></h2>
+    <div class="tabs" id="tabs"></div>
+    <h2 class="comb-title" id="combtitle">Your honeycomb <small>9 cells</small></h2>
     <div class="comb" id="comb"></div>
     <div class="foot"><button class="link" id="sound">Sound: on</button><button class="link" id="reset">Start over</button></div>
   </section>
@@ -209,12 +226,23 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
     </div>
   </section>
 
+  <!-- CERTIFICATES -->
+  <section class="screen" id="certs">
+    <div class="lhead">
+      <button class="back" id="certsback" aria-label="Back to the hive">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>
+      </button>
+      <h2><span class="num">Cynthia's</span>Certificates</h2>
+    </div>
+    <div class="certlist" id="certlist"></div>
+  </section>
+
   <!-- QUEEN -->
   <section class="screen" id="queen">
     <div class="finish">
       <div class="bee-wrap" id="qbee"></div>
-      <h2>Queen Cynthia!</h2>
-      <p>Every cell is full of honey. You know Claude now. Go make something beautiful.</p>
+      <h2 id="qtitle">Queen Cynthia!</h2>
+      <p id="qtext">Every cell is full of honey. You know Claude now. Go make something beautiful.</p>
       <div class="drops" id="drops"></div>
       <img class="cert" id="certimg" alt="Certificate: Cynthia completed Course 1">
       <div class="actions" style="justify-content:center;margin-top:4px">
@@ -251,7 +279,7 @@ EXT. STREET - CONTINUOUS
 
 Nour runs out, still in the stained white dress, Layla's navy jacket thrown over her shoulders.`;
 
-const CH = [
+const CH1 = [
 { title:"Getting Claude", short:"Getting Claude",
   cards:[
     {h:"First, let's get Claude.", p:["Claude is an app, like WhatsApp. On your iPad open the App Store and search 'Claude'. Download it. It's free to start."], tip:"No iPad nearby? On any computer go to claude.ai in the browser. Same thing."},
@@ -379,7 +407,128 @@ const CH = [
     {q:"Best uses of Claude on set?", a:["Breakdowns, continuity, lists, messages","Sewing the hems"], c:0},
   ]},
 ];
-const N = CH.length;
+const CH2 = [
+{ title:"Your Hive HQ", short:"Hive HQ",
+  cards:[
+    {h:"Projects, properly.", p:["A Project is your production office inside Claude. Script, cast list, your rules, all in one place. Every chat inside it already knows everything."]},
+    {h:"Give it instructions.", p:["Project instructions are rules Claude follows in every chat of that Project. Write them once."], ex:{b:"Project instructions", t:"You are my costume assistant on [series]. I'm Cynthia, the costume designer. Keep answers short. Lists go in tables. Characters: [names]. Era: [era]. Budget is tight, suggest rentals before purchases."}, tip:"Instructions live in the Project's settings, not in a chat. Look for 'Instructions' or 'Set project instructions' when you open the Project."},
+    {h:"Upload the bible.", p:["Script, cast list with measurements, the director's mood deck. Add them to the Project's files. Claude reads them when you ask, in any chat."]},
+    {h:"One Project per production.", p:["Two shows in one Project confuses Claude the same way it would confuse a new assistant."]},
+    {h:"Name chats like files.", p:["'Ep3 breakdown', 'Nour fittings', 'Rental quotes'. Future you will say thank you."]},
+  ],
+  task:{p:"Create a Project for your current production. Paste these instructions, fill the brackets:", ex:"You are my costume assistant on [series]. I'm Cynthia, the costume designer. Keep answers short. Lists go in tables. Characters: [names]. Era: [era]. Budget is tight, suggest rentals before purchases."},
+  quiz:[
+    {q:"Project instructions apply to...", a:["Every chat inside that Project","Only the first chat","All of Claude, forever"], c:0},
+    {q:"Two shows at once. How many Projects?", a:["Two","One, Claude sorts it out","None, plain chats are fine"], c:0},
+    {q:"Which belongs in the Project files?", a:["Script, cast list, mood deck","Your bank card","Your Netflix password"], c:0},
+    {q:"'Lists go in tables' in the instructions means...", a:["Claude formats every list as a table, every chat","Nothing, Claude ignores it","Claude only makes tables"], c:0},
+  ]},
+{ title:"Claude Design", short:"Claude Design",
+  cards:[
+    {h:"What it is.", p:["Claude Design is a canvas inside Claude. Boards, posters, print sheets, drawn for you from words and your photos. It opens in a panel next to the chat."], tip:"Say 'design' or 'make a board' and Claude uses it. If it just writes text instead, say 'I want this as a visual board in Claude Design'."},
+    {h:"The mood board.", p:[""], ex:{b:"Say", t:"In Claude Design, make a mood board for [show]: [era], [tone]. Palette of 5 colors with names, 3 texture words, and space for 6 reference photos. White background, clean, no clutter."}},
+    {h:"Character boards.", p:["One board per character. Upload the fitting photos first, then ask."], ex:{b:"Say", t:"Character board for Nour: her 4 looks C1 to C4, one photo each, scene numbers under each, palette strip at the bottom. Same style as the mood board."}, tip:"Say 'same style as the mood board'. Claude keeps the fonts and colors matching across boards."},
+    {h:"Print sheets for the truck.", p:["A one-page look sheet per character, A4, big photos, change numbers, scene list. Print it, tape it on the rail."], ex:{b:"Say", t:"A4 printable look sheet for Nour, portrait, 4 looks in a grid, change number and scenes under each, her name big at the top."}},
+    {h:"Edit by pointing.", p:["'Make the palette strip thinner.' 'Swap photo 2 and 3.' 'Less yellow.' You can also tap elements and change them by hand."], tip:"Download or Export is at the top of the panel. PDF for print, PNG for WhatsApp."},
+  ],
+  task:{p:"Upload 3 reference photos, then paste this in Claude:", ex:"In Claude Design, make a mood board for [show]: [era], [tone]. Use my 3 photos, add a 5-color palette with names, white background, clean. Then export it as PNG."},
+  quiz:[
+    {q:"Claude Design is for...", a:["Visual boards, posters, print sheets","Writing emails","Editing video"], c:0},
+    {q:"Claude answered with text instead of a board. You say...", a:["'I want this as a visual board in Claude Design'","Give up and use Canva","Type it again, louder"], c:0},
+    {q:"To keep all character boards matching...", a:["Say 'same style as the mood board'","Make them on different days","Use a different font each time"], c:0},
+    {q:"Best export for a printed rail sheet?", a:["PDF","PNG","Screenshot"], c:0},
+  ]},
+{ title:"The director pitch", short:"Director pitch",
+  cards:[
+    {h:"Slides, not boards.", p:["A deck is for presenting in a room. Boards are for walls and WhatsApp. Claude makes decks too: say 'presentation' or 'slides'."]},
+    {h:"Structure that sells.", p:["1 concept slide. 1 palette. 1 slide per character. 1 references. 1 how-we-make-it. Ask for exactly this order."]},
+    {h:"Brief like a director.", p:[""], ex:{b:"Say", t:"Make a lookbook presentation for [show]: [era], [tone]. Slides: concept, palette, one per character ([names]), references, how we make it. Use my uploaded photos. Little text, big images, white background."}},
+    {h:"Iterate slide by slide.", p:["'Slide 3, swap the red for rust.' 'Palette slide, one row only.' Claude edits that slide, the rest stays."], tip:"Ask for two versions of the whole deck, one calm and one bold. Directors choose faster between two than they approve one."},
+    {h:"Export and present.", p:["PDF to send. PowerPoint if the producer wants to edit. Or present straight from the iPad, full screen."]},
+  ],
+  task:{p:"Paste this in Claude, with your photos uploaded:", ex:"Make a lookbook presentation for [show]: [era], [tone]. Slides: concept, palette, one per character ([names]), references. Little text, big images. Then make a second, bolder version."},
+  quiz:[
+    {q:"First slide of a lookbook deck?", a:["Concept","Budget","Your CV"], c:0},
+    {q:"One color wrong on slide 3. You say...", a:["'Slide 3, swap red for rust'","Rebuild the whole deck","Fix it in Photoshop"], c:0},
+    {q:"Why make two versions?", a:["People choose faster between two","Claude needs practice","Two is the rule"], c:0},
+    {q:"The producer wants to edit the deck. Export as...", a:["PowerPoint","PDF","PNG"], c:0},
+  ]},
+{ title:"Image prompts that work", short:"Image prompts",
+  cards:[
+    {h:"Prompt anatomy.", p:["Subject, era, garment details, fabric, color, lighting, camera, background. In that order. Every time."]},
+    {h:"Like this.", p:[""], ex:{b:"Prompt", t:"Woman, 28, Beirut 1975, cream linen wrap dress with wide lapels, gold hoop earrings, soft window light, full body, 50mm, plain grey studio background."}, tip:"Fabric words matter: linen, wool crepe, silk satin. They change how the garment falls in the picture."},
+    {h:"Keep the face consistent.", p:["Give a reference photo of the actor (with their permission) and say 'same person, same face'. Higgsfield takes the reference directly."]},
+    {h:"Variations, not one shot.", p:[""], ex:{b:"Say", t:"Make 3 variations: one more formal, one in a cheaper fabric, one in rust instead of cream. Same person, same pose."}},
+    {h:"What AI gets wrong.", p:["Hands, buttons, logos, symmetry, historical accuracy. Use the images for mood and silhouette. Never as sewing instructions."]},
+  ],
+  task:{p:"Paste this in Claude, then run one prompt in Higgsfield or Midjourney:", ex:"Write 3 image prompts for [character], [era]. Order: subject, era, garment, fabric, color, light, camera, background. One formal, one everyday, one for the wedding scene."},
+  quiz:[
+    {q:"Order of a good prompt?", a:["Subject, era, garment, fabric, light, camera, background","Background first, then the rest","Any order, AI doesn't care"], c:0},
+    {q:"Same face across images. You...", a:["Give a reference photo, say 'same person'","Describe the face each time","Hope for the best"], c:0},
+    {q:"AI images are reliable for...", a:["Mood and silhouette","Exact button count","Historical accuracy"], c:0},
+    {q:"'Wool crepe' in a prompt...", a:["Changes how the garment falls","Does nothing","Makes it warmer"], c:0},
+  ]},
+{ title:"Breakdown, pro level", short:"Pro breakdown",
+  cards:[
+    {h:"The pro columns.", p:["Scene, set, day or night, story day, character, change number, description, continuity note. Ask for exactly these."]},
+    {h:"Story days.", p:[""], ex:{b:"Say", t:"Work out the story days for this script. Group scenes by story day and tell me where each new day starts."}, tip:"Story day is the day inside the story, not the shoot day. One story day usually means one outfit."},
+    {h:"Change numbers.", p:["'Number each costume change per character: C1, C2, C3.' Now every photo, bag and rail label carries that number."]},
+    {h:"Check its work.", p:["'Which scenes did you skip? Any scene with no character listed?' Claude finds its own gaps when you ask."]},
+    {h:"Straight to Sheets.", p:[""], ex:{b:"Say", t:"Put this breakdown in a new Google Sheet called [show] Costume Breakdown, one row per character per scene."}, tip:"Google Drive must be connected. Course 1, cell 5."},
+  ],
+  task:{p:"Upload a full episode, then paste:", ex:"Costume breakdown with the pro columns: scene, set, day/night, story day, character, change number, description, continuity note. Number changes per character. Then tell me which scenes you skipped."},
+  quiz:[
+    {q:"Story day means...", a:["The day inside the story","The shoot day","The day the script was written"], c:0},
+    {q:"'Nour C2' means...", a:["Nour's second costume change","Scene 2","Camera 2"], c:0},
+    {q:"Claude gave you a breakdown. Best next question?", a:["Which scenes did you skip?","Thanks!","Make it longer"], c:0},
+    {q:"One row per...", a:["Character per scene","Episode","Actor"], c:0},
+  ]},
+{ title:"Fittings and continuity", short:"Continuity",
+  cards:[
+    {h:"Photo discipline.", p:["Front, back, side, detail. Four photos per look. Say the look name out loud when you shoot: Nour C2."]},
+    {h:"Let Claude file it.", p:[""], ex:{b:"Say", t:"This is Nour C2, scenes 12 to 18, fitted on [date]. Add it to the continuity log."}, tip:"Do this inside the production's Project so the log stays in one place."},
+    {h:"Compare two photos.", p:["Send today's photo and the fitting photo. 'What's different?' Missing belt, wrong scarf, rolled sleeve. Claude spots it."]},
+    {h:"The wrap list.", p:[""], ex:{b:"Say", t:"List every look by character with scenes and a status: fitted, shot, returned."}},
+    {h:"When it says 'I can't see that'.", p:["Bad light, blurry photo. Retake it. Claude is only as good as the picture."]},
+  ],
+  task:{p:"Take two photos of the same outfit, change one small thing between them. Send both and paste:", ex:"These are the same look. What's different between photo 1 and photo 2?"},
+  quiz:[
+    {q:"Minimum photos per look?", a:["Four: front, back, side, detail","One from the front","Ten, Claude needs lots"], c:0},
+    {q:"Where should the continuity log live?", a:["In the production's Project","A new chat every day","In your head"], c:0},
+    {q:"Claude says the photo is unclear. You...", a:["Retake it in better light","Argue with it","Describe it in words"], c:0},
+    {q:"Comparing two photos is for...", a:["Spotting continuity differences","Picking the prettier actor","Deleting duplicates"], c:0},
+  ]},
+{ title:"Skills, memory and NDAs", short:"Skills and NDAs",
+  cards:[
+    {h:"Memory.", p:["Claude can remember things across chats: your role, your formats, your shows. Tell it: 'Remember that I always want breakdowns as tables.'"], tip:"Memory is a setting. If Claude keeps forgetting, check it's turned on in Settings."},
+    {h:"Skills.", p:["A skill is a saved recipe for a job you repeat. Ask: 'Turn the way we just did this breakdown into a skill I can reuse.'"]},
+    {h:"NDAs are real.", p:["An unreleased script is confidential. Before uploading, check the producer is fine with cloud tools. If the NDA says no, it's no."]},
+    {h:"Less is enough.", p:["You rarely need the whole script to get help. One scene, or names changed, often does the job."]},
+    {h:"You're the designer.", p:["Claude speeds up the boring parts. The taste, the choice, the fitting room: that's you. It always was."]},
+  ],
+  task:{p:"Paste this in Claude:", ex:"Remember that I'm the costume designer on [show] and I always want breakdowns as tables. Then turn the way we did the last breakdown into a reusable skill."},
+  quiz:[
+    {q:"Memory is for...", a:["Things Claude should know in every chat","One-time questions","Storing passwords"], c:0},
+    {q:"A skill is...", a:["A saved recipe for a repeated job","A new app","A paid plan"], c:0},
+    {q:"Unreleased script, NDA signed. You...", a:["Check with the producer before uploading","Upload, it's just a tool","Upload only one episode"], c:0},
+    {q:"Which stays yours?", a:["Taste and the final choice","Nothing, Claude does it all","Only the formatting"], c:0},
+  ]},
+{ title:"Budget in Sheets", short:"Budget",
+  cards:[
+    {h:"Start from the breakdown.", p:["Every change number is a line in the budget. Ask Claude to build the list from the breakdown so nothing is forgotten."]},
+    {h:"The columns.", p:["Character, change, item, buy / rent / make, quantity, unit price, total, status, shop. Ask for exactly these."]},
+    {h:"Formulas, not numbers.", p:[""], ex:{b:"Say", t:"Add a total column that multiplies quantity by unit price, a grand total at the bottom, and a small table of totals per character."}, tip:"Say 'formula'. A formula updates itself when a price changes. A typed number doesn't."},
+    {h:"Update by talking.", p:[""], ex:{b:"Say", t:"Nour C2 coat: rented from [shop], 120 dollars, 3 days. Update the sheet."}},
+    {h:"Ask for the bad news.", p:["'Which character costs the most?' 'What can I rent instead of buy to save 20 percent?' Claude reads the sheet and answers."]},
+  ],
+  task:{p:"With Drive connected, paste this in the production's Project:", ex:"Create a Google Sheet called [show] Wardrobe Budget from the breakdown: character, change, item, buy/rent/make, quantity, unit price, total (formula), status, shop. Grand total at the bottom, totals per character on the side."},
+  quiz:[
+    {q:"Why ask for a formula instead of a number?", a:["It updates when prices change","It looks professional","Formulas are free"], c:0},
+    {q:"'Buy / rent / make' is a column because...", a:["It changes the cost and the returns","Producers like three words","It fills space"], c:0},
+    {q:"You rented a coat today. You...", a:["Tell Claude the details, it updates the sheet","Retype the whole sheet","Remember it for later"], c:0},
+    {q:"Which can Claude answer from the sheet?", a:["Which character costs the most","What the actor ate","Tomorrow's weather"], c:0},
+  ]},
+];
 
 /* ---------- bee drawing ---------- */
 function bee(mood, id){
@@ -418,13 +567,40 @@ const drop = '<svg viewBox="-3 -3 36 40" aria-hidden="true"><path d="M15 2 C15 2
 const bulb = '<svg viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>';
 const copyIco = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
 
+
+const COURSES = [
+  { n:1, name:'Cynthia and the Hive', cells:CH1, hello:"Let's learn Claude together. One honeycomb cell at a time, no tech talk, lots of costumes.",
+    cert:{title:'is officially Queen of the Hive', lines:['for completing Course 1, Cynthia and the Hive:','all 9 cells, every quiz, no bees harmed.']},
+    queen:{h:'Queen Cynthia!', p:'Every cell is full of honey. You know Claude now. Go make something beautiful.'} },
+  { n:2, name:'The Working Hive', cells:CH2, hello:"Round two. Real work, harder quizzes, more honey. Design first, budget last.",
+    cert:{title:'is officially Head of Wardrobe of the Hive', lines:['for completing Course 2, The Working Hive:','8 cells of real work, 32 questions, still no bees harmed.']},
+    queen:{h:'Double crown!', p:'Course 2 done. You run a production with Claude now. The hive is proud.'} },
+];
+let cc = 1; // current course number
+const course = ()=>COURSES[cc-1];
+const CHc = ()=>course().cells;
+const N = ()=>CHc().length;
+
 /* ---------- state ---------- */
-const KEY='cynthia-hive-v2';
-let state={done:[],honey:0,sound:true};
-try{ const s=localStorage.getItem(KEY); if(s) state=Object.assign(state,JSON.parse(s)); }catch(e){}
+const KEY='cynthia-hive-v3';
+let state={courses:{1:{done:[]},2:{done:[]}},honey:0,sound:true,certs:[]};
+try{
+  const s=localStorage.getItem(KEY);
+  if(s){ state=Object.assign(state,JSON.parse(s)); }
+  else { // migrate from v2
+    const old=localStorage.getItem('cynthia-hive-v2');
+    if(old){ const o=JSON.parse(old); state.honey=o.honey||0; state.sound=o.sound!==false; state.courses[1].done=o.done||[];
+      if(state.courses[1].done.length>=9) state.certs.push({course:1,date:new Date().toISOString(),honey:state.honey}); }
+  }
+}catch(e){}
+if(!state.certs) state.certs=[];
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-const isDone=i=>state.done.includes(i);
-const isOpen=i=>i===0||isDone(i-1)||isDone(i);
+save();
+const doneList=(n)=>state.courses[n||cc].done;
+const isDone=i=>doneList().includes(i);
+const courseDone=n=>state.courses[n].done.length>=COURSES[n-1].cells.length;
+const courseOpen=n=>n===1||courseDone(n-1);
+const isOpen=i=>courseOpen(cc)&&(i===0||isDone(i-1)||isDone(i));
 
 /* ---------- sound ---------- */
 let AC=null;
@@ -435,7 +611,7 @@ function play(kind){
     if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
     if(AC.state==='suspended') AC.resume();
     const t=AC.currentTime;
-    if(kind==='buzz'){ // happy buzz + rising ding
+    if(kind==='buzz'){
       const o=AC.createOscillator(),v=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();
       o.type='sawtooth'; o.frequency.setValueAtTime(170,t); o.frequency.linearRampToValueAtTime(230,t+.25);
       l.frequency.value=28; lg.gain.value=18; l.connect(lg).connect(o.frequency); l.start(t); l.stop(t+.3);
@@ -452,7 +628,7 @@ function play(kind){
 const $=id=>document.getElementById(id);
 function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo(0,0); }
 let toastT; function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),1800); }
-function progress(){ const n=state.done.length; $('score').textContent=n+' / '+N; $('barfill').style.width=(n/N*100)+'%'; $('honey').textContent=state.honey; }
+function progress(){ const n=doneList().length; $('score').textContent=n+' / '+N(); $('barfill').style.width=(n/N()*100)+'%'; $('honey').textContent=state.honey; $('certcount').textContent=state.certs.length; }
 function addHoney(n){ state.honey+=n; save(); progress(); const p=$('honeypill'); p.classList.remove('bump'); void p.offsetWidth; p.classList.add('bump'); }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function copyText(txt, btn){
@@ -460,57 +636,77 @@ function copyText(txt, btn){
   const fallback=()=>{ try{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); const r=document.execCommand('copy'); ta.remove(); if(r) ok(); else toast('Hold your finger on the text and copy it'); }catch(e){ toast('Hold your finger on the text and copy it'); } };
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok).catch(fallback); } else fallback();
 }
-function exBox(ex){ // {b,t,script}
+function exBox(ex){
   return `<div class="ex has-copy${ex.script?' script':''}"><b>${ex.b}</b>${esc(ex.t)}<button class="copy" data-copy="${esc(ex.t).replace(/"/g,'&quot;').replace(/\n/g,'&#10;')}">${copyIco}Copy</button></div>`;
 }
 function tipBox(t){ return t?`<div class="tip">${bulb}<div><b>Tip</b>${t}</div></div>`:''; }
 function wireCopy(root){ root.querySelectorAll('.copy').forEach(b=>{ b.onclick=()=>copyText(b.dataset.copy,b); }); }
 
-/* ---------- honeycomb ---------- */
+/* ---------- home: tabs + honeycomb ---------- */
+const lockIco='<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="#7A736C" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+function setCourse(n){
+  cc=n; const c=course();
+  $('coursetag').textContent='Course '+n+' · Made for Cynthia';
+  $('hellotxt').textContent = courseDone(n) ? (n===1?'Queen of the Hive. Come back any time to refresh a cell.':'Double crown. Nothing left to prove, but the cells are still here.') : c.hello;
+  $('combtitle').innerHTML='Your honeycomb <small>'+c.cells.length+' cells</small>';
+  renderTabs(); progress(); layoutComb();
+}
+function renderTabs(){
+  const t=$('tabs'); t.innerHTML='';
+  COURSES.forEach(c=>{
+    const b=document.createElement('button'); const open=courseOpen(c.n);
+    b.className='tab'+(c.n===cc?' on':''); b.disabled=!open;
+    b.innerHTML=(open?'':'<svg viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>')+'Course '+c.n+(courseDone(c.n)?' ✓':'');
+    b.onclick=()=>{ play('tap'); setCourse(c.n); };
+    t.appendChild(b);
+  });
+}
 function layoutComb(){
   const comb=$('comb'); comb.innerHTML='';
   const W=comb.clientWidth; const s=10;
-  const rows=[[0,1,2],[3,4],[5,6,7],[8,'next']];
+  const cells=CHc(); const items=cells.map((_,i)=>i); if(cc<COURSES.length) items.push('next');
+  const rows=[]; let i=0, three=true; while(i<items.length){ const take=three?3:2; rows.push(items.slice(i,i+take)); i+=take; three=!three; }
   const w=Math.min(Math.floor((W-2*s)/3), 220); const h=Math.round(w*1.1547);
   const pitch=0.75*h + s*0.866;
   const totalW=3*w+2*s; const left=(W-totalW)/2;
   rows.forEach((row,r)=>{
-    const off = row.length===2 ? (w+s)/2 : 0;
-    row.forEach((i,k)=>{
+    const off = (r%2===1) ? (w+s)/2 : 0;
+    row.forEach((it,k)=>{
       const b=document.createElement('button');
-      const next = i==='next';
-      const open=!next&&isOpen(i), done=!next&&isDone(i);
-      b.className='cell'+(done?' done':open?' open':'');
-      b.style.cssText=`left:${left+off+k*(w+s)}px;top:${r*pitch}px;width:${w}px;height:${h}px`;
-      const fill = done ? '#FFC72C' : open ? '#FFF3C4' : '#fff';
-      const lock='<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="#7A736C" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-      if(next){
-        b.innerHTML=`<svg viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true"><polygon points="50,2 97,27 97,88 50,113 3,88 3,27" fill="#fff" stroke="#7A736C" stroke-width="4" stroke-dasharray="6 5" vector-effect="non-scaling-stroke"/></svg><div class="in">${lock}<span class="t">Course 2</span><span class="t" style="font-weight:700">coming soon</span></div>`;
-        b.setAttribute('aria-label','Course 2, coming soon');
-        b.onclick=()=>{ toast('Course 2 is still in the oven'); };
+      if(it==='next'){
+        const nx=cc+1, open=courseOpen(nx);
+        b.className='cell'+(open?' open':'');
+        b.style.cssText=`left:${left+off+k*(w+s)}px;top:${r*pitch}px;width:${w}px;height:${h}px`;
+        b.innerHTML=`<svg viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true"><polygon points="50,2 97,27 97,88 50,113 3,88 3,27" fill="${open?'#FFF3C4':'#fff'}" stroke="${open?'#1F1A17':'#7A736C'}" stroke-width="4" ${open?'':'stroke-dasharray="6 5"'} vector-effect="non-scaling-stroke"/></svg><div class="in">${open?'':lockIco}<span class="t" style="font-size:15px">Course ${nx}</span><span class="t" style="font-weight:700">${open?COURSES[nx-1].name:'finish this one first'}</span>${open?'<span class="chip">Open</span>':''}</div>`;
+        b.setAttribute('aria-label','Course '+nx+(open?'':', locked'));
+        b.onclick=()=>{ if(!open){ b.classList.add('shake'); play('nope'); toast('Finish Course '+cc+' first'); setTimeout(()=>b.classList.remove('shake'),500); return; } play('tap'); setCourse(nx); };
       } else {
+        const i=it, open=isOpen(i), done=isDone(i);
+        b.className='cell'+(done?' done':open?' open':'');
+        b.style.cssText=`left:${left+off+k*(w+s)}px;top:${r*pitch}px;width:${w}px;height:${h}px`;
+        const fill = done ? '#FFC72C' : open ? '#FFF3C4' : '#fff';
         b.innerHTML=`<svg viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true"><polygon points="50,2 97,27 97,88 50,113 3,88 3,27" fill="${fill}" stroke="#1F1A17" stroke-width="4" vector-effect="non-scaling-stroke"/></svg>
-          <div class="in">${open?'':lock}<span class="n">${i}</span><span class="t">${CH[i].short}</span>${done?'<span class="chip">Done</span>':open?'<span class="chip">Start</span>':''}</div>`;
-        b.setAttribute('aria-label',`Cell ${i}: ${CH[i].title}${done?', done':open?'':', locked'}`);
+          <div class="in">${open?'':lockIco}<span class="n">${i}</span><span class="t">${cells[i].short}</span>${done?'<span class="chip">Done</span>':open?'<span class="chip">Start</span>':''}</div>`;
+        b.setAttribute('aria-label',`Cell ${i}: ${cells[i].title}${done?', done':open?'':', locked'}`);
         b.onclick=()=>{ if(!open){ b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); play('nope'); toast(`Fill cell ${i-1} first`); return; } play('tap'); openLesson(i); };
       }
       comb.appendChild(b);
     });
   });
-  comb.style.height=(3*pitch+h)+'px';
+  comb.style.height=((rows.length-1)*pitch+h)+'px';
 }
 
 /* ---------- lesson flow ---------- */
 let cur=0, step=0, qi=0, firstTry=true;
 function openLesson(i){
   cur=i; step=0; qi=0;
-  $('lnum').textContent='Cell '+i; $('ltitle').textContent=CH[i].title;
+  $('lnum').textContent='Course '+cc+' · Cell '+i; $('ltitle').textContent=CHc()[i].title;
   show('lesson'); render();
 }
-function total(){ return CH[cur].cards.length + 1 + CH[cur].quiz.length; }
+function total(){ const c=CHc()[cur]; return c.cards.length + 1 + c.quiz.length; }
 function dots(){
-  const d=$('dots'); d.innerHTML='';
-  const n=total(); const pos = step<=CH[cur].cards.length ? step : CH[cur].cards.length+1+qi;
+  const d=$('dots'); d.innerHTML=''; const c=CHc()[cur];
+  const n=total(); const pos = step<=c.cards.length ? step : c.cards.length+1+qi;
   for(let k=0;k<n;k++){ const i=document.createElement('i'); if(k<pos) i.className='on'; if(k===pos) i.className='now'; d.appendChild(i); }
 }
 function setBee(mood){ const w=$('lbee'); w.innerHTML=bee(mood,'l'); w.classList.remove('yay','hmm'); void w.offsetWidth; if(mood==='yay'||mood==='hmm') w.classList.add(mood); }
@@ -519,19 +715,19 @@ function wireHelp(back){
   const h=$('help'); if(!h) return;
   h.onclick=()=>{
     setBee('happy');
-    const b=$('bubble');
-    const link = HELPER_WHATSAPP ? `<a class="btn sm" href="https://wa.me/${HELPER_WHATSAPP}?text=${encodeURIComponent('Hi '+HELPER_NAME+', I\'m stuck on cell '+cur+' of the Hive: '+CH[cur].title)}" target="_blank" rel="noopener">Message ${HELPER_NAME} on WhatsApp</a>` : '';
+    const b=$('bubble'); const c=CHc()[cur];
+    const link = HELPER_WHATSAPP ? `<a class="btn sm" href="https://wa.me/${HELPER_WHATSAPP}?text=${encodeURIComponent('Hi '+HELPER_NAME+', I\'m stuck on course '+cc+' cell '+cur+' of the Hive: '+c.title)}" target="_blank" rel="noopener">Message ${HELPER_NAME} on WhatsApp</a>` : '';
     b.innerHTML=`<h3>Stuck? Totally normal.</h3><p>Three things to try first:</p>
       <p>1. Read the card again, slowly. Half the time that's it.</p>
       <p>2. Ask Claude itself. Paste the card text and say 'explain this to me simply'.</p>
-      <p>3. Message ${HELPER_NAME}. That's what friends are for. Tell him which cell you're on: <b>cell ${cur}, ${CH[cur].title}</b>.</p>
+      <p>3. Message ${HELPER_NAME}. That's what friends are for. Tell him where you are: <b>course ${cc}, cell ${cur}, ${c.title}</b>.</p>
       <div class="actions">${link}<button class="btn ghost sm" id="hback">Back to the lesson</button></div>`;
     $('hback').onclick=back;
   };
 }
 function render(){
   dots();
-  const c=CH[cur]; const b=$('bubble');
+  const c=CHc()[cur]; const b=$('bubble');
   if(step<c.cards.length){
     const card=c.cards[step]; setBee('happy');
     b.innerHTML=`<h3>${card.h}</h3>${card.p.filter(Boolean).map(t=>`<p>${t}</p>`).join('')}${card.ex?exBox(card.ex):''}${tipBox(card.tip)}
@@ -552,7 +748,7 @@ function render(){
   }
 }
 function renderQuiz(){
-  const c=CH[cur]; const q=c.quiz[qi]; const b=$('bubble'); setBee('happy');
+  const c=CHc()[cur]; const q=c.quiz[qi]; const b=$('bubble'); setBee('happy');
   const opts=q.a.map((t,k)=>({t,ok:k===q.c})).sort(()=>Math.random()-.5);
   b.innerHTML=`<h3>Quiz ${qi+1} of ${c.quiz.length}</h3><p>${q.q}</p><div class="answers">${opts.map((o,k)=>`<button class="ans" data-k="${k}">${miniBee}<span>${o.t}</span></button>`).join('')}</div><div class="verdict" id="verdict"></div><div class="actions" id="qact">${helpBtn()}</div>`;
   wireHelp(renderQuiz);
@@ -563,7 +759,7 @@ function renderQuiz(){
         btn.classList.add('good'); b.querySelectorAll('.ans').forEach(x=>x.disabled=true);
         setBee('yay'); play('buzz');
         const gain=firstTry?1:0; if(gain) addHoney(gain);
-        v.className='verdict good'; v.innerHTML=['Bzzz! Correct','Sweet as honey','Exactly right'][qi%3]+(gain?`<span class="earn">${drop}+1</span>`:'');
+        v.className='verdict good'; v.innerHTML=['Bzzz! Correct','Sweet as honey','Exactly right','Sharp as a pin'][qi%4]+(gain?`<span class="earn">${drop}+1</span>`:'');
         const last=qi===c.quiz.length-1;
         $('qact').innerHTML=`<button class="btn sm" id="qn">${last?'Fill the cell':'Next question'}</button>`;
         $('qn').onclick=()=>{ play('tap'); if(last) finishCell(); else { qi++; firstTry=true; renderQuiz(); } };
@@ -577,66 +773,77 @@ function renderQuiz(){
 }
 function finishCell(){
   const fresh=!isDone(cur);
-  if(fresh){ state.done.push(cur); save(); addHoney(5); }
+  if(fresh){ doneList().push(cur); save(); addHoney(5); }
   progress();
   const b=$('bubble'); setBee('yay'); play('win');
-  const all=state.done.length===N;
+  const all=courseDone(cc);
+  const already=state.certs.some(x=>x.course===cc);
+  if(all&&!already){ state.certs.push({course:cc,date:new Date().toISOString(),honey:state.honey}); save(); progress(); }
   b.innerHTML=`<h3>Cell ${cur} is full of honey!</h3><p>${fresh?'<span class="earn" style="margin:0 0 8px">'+drop+'+5 honey</span><br>':''}${all?'That was the last one. Something special is waiting.':'Nice work. The next cell just unlocked.'}</p>
     <div class="actions"><button class="btn sm" id="fin">${all?'See what happened':'Back to the hive'}</button></div>`;
   confetti(all?90:30);
-  $('fin').onclick=()=>{ if(all) showQueen(); else goHome(cur+1); };
+  $('fin').onclick=()=>{ if(all) showQueen(state.certs.find(x=>x.course===cc), true); else goHome(cur+1); };
 }
 function goHome(popIdx){
-  show('home'); layoutComb();
+  show('home'); setCourse(cc);
   if(popIdx!==undefined){ const cells=document.querySelectorAll('.cell'); if(cells[popIdx]) cells[popIdx].classList.add('pop'); }
 }
-function showQueen(){
+function showQueen(cert, celebrate){
+  const c=COURSES[cert.course-1];
   show('queen'); $('qbee').innerHTML=bee('queen','q');
-  $('drops').innerHTML=Array.from({length:9},(_,i)=>drop.replace('<svg',`<svg style="animation-delay:${i*0.1}s"`)).join('');
-  confetti(120);
-  makeCertificate();
+  $('qtitle').textContent=c.queen.h; $('qtext').textContent=c.queen.p;
+  $('drops').innerHTML=Array.from({length:c.cells.length},(_,i)=>drop.replace('<svg',`<svg style="animation-delay:${i*0.1}s"`)).join('');
+  $('certhint').textContent = cert.course<COURSES.length ? 'Save it, then send it to '+HELPER_NAME+'. That unlocks Course '+(cert.course+1)+'.' : 'Save it, send it to '+HELPER_NAME+', and go rest. You earned it.';
+  if(celebrate) confetti(120);
+  makeCertificate(cert);
 }
 
-/* ---------- certificate ---------- */
+/* ---------- certificates ---------- */
+function showCerts(){
+  show('certs'); const l=$('certlist'); l.innerHTML='';
+  if(!state.certs.length){ l.innerHTML='<p class="empty">No certificates yet. Finish a course and one appears here.</p>'; return; }
+  state.certs.slice().sort((a,b)=>a.course-b.course).forEach(ct=>{
+    const c=COURSES[ct.course-1]; const d=new Date(ct.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    const el=document.createElement('div'); el.className='certcard';
+    el.innerHTML=`<div class="hx">${ct.course}</div><div class="meta"><b>Course ${ct.course}: ${c.name}</b><span>${d} · ${ct.honey} honey · HIVE-${ct.course}-${String(ct.honey).padStart(3,'0')}</span></div><button class="btn sm" aria-label="View certificate for course ${ct.course}">View</button>`;
+    el.querySelector('button').onclick=()=>{ play('tap'); showQueen(ct,false); };
+    l.appendChild(el);
+  });
+}
 let certBlob=null;
 function hexPath(ctx,x,y,r){ ctx.beginPath(); for(let i=0;i<6;i++){ const a=Math.PI/180*(60*i-90); const px=x+r*Math.cos(a), py=y+r*Math.sin(a); i?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); }
 function svgImage(svg){ return new Promise(res=>{ const img=new Image(); const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'})); img.onload=()=>{URL.revokeObjectURL(url);res(img);}; img.onerror=()=>res(null); img.src=url; }); }
-async function makeCertificate(){
-  const W=1200,H=850; const c=document.createElement('canvas'); c.width=W*2; c.height=H*2; const ctx=c.getContext('2d'); ctx.scale(2,2);
+async function makeCertificate(cert){
+  certBlob=null; $('certimg').removeAttribute('src');
+  const c=COURSES[cert.course-1];
+  const W=1200,H=850; const cv=document.createElement('canvas'); cv.width=W*2; cv.height=H*2; const ctx=cv.getContext('2d'); ctx.scale(2,2);
   try{ await document.fonts.load("700 80px Fredoka"); await document.fonts.load("800 24px Nunito"); }catch(e){}
   const ink='#1F1A17', honey='#FFC72C', soft='#FFF3C4';
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  // soft hex decor, clipped inside the frame
   ctx.save(); ctx.beginPath(); ctx.roundRect(56,56,W-112,H-112,26); ctx.clip();
   ctx.fillStyle=soft; [[90,80,110],[1110,80,110],[1110,770,110],[90,770,110]].forEach(([x,y,r])=>{hexPath(ctx,x,y,r);ctx.fill();});
   ctx.restore();
-  // frame
   ctx.strokeStyle=ink; ctx.lineWidth=6; ctx.beginPath(); ctx.roundRect(40,40,W-80,H-80,36); ctx.stroke();
   ctx.strokeStyle=honey; ctx.lineWidth=4; ctx.beginPath(); ctx.roundRect(56,56,W-112,H-112,26); ctx.stroke();
-  // text
   ctx.fillStyle=ink; ctx.textAlign='center';
-  ctx.font="800 20px Nunito, Arial, sans-serif"; ctx.letterSpacing='4px'; ctx.fillText('CERTIFICATE OF HONEY', W/2, 140); ctx.letterSpacing='0px';
+  ctx.font="800 20px Nunito, Arial, sans-serif"; ctx.letterSpacing='4px'; ctx.fillText('CERTIFICATE OF HONEY · COURSE '+cert.course, W/2, 140); ctx.letterSpacing='0px';
   ctx.font="700 76px Fredoka, Arial, sans-serif"; ctx.fillText('Cynthia', W/2, 250);
-  ctx.font="700 34px Fredoka, Arial, sans-serif"; ctx.fillText('is officially Queen of the Hive', W/2, 305);
+  ctx.font="700 34px Fredoka, Arial, sans-serif"; ctx.fillText(c.cert.title, W/2, 305);
   ctx.font="800 22px Nunito, Arial, sans-serif"; ctx.fillStyle='#4A443F';
-  ctx.fillText('for completing Course 1, Cynthia and the Hive:', W/2, 365);
-  ctx.fillText('all 9 cells, every quiz, no bees harmed.', W/2, 398);
-  // honey badge
+  ctx.fillText(c.cert.lines[0], W/2, 365); ctx.fillText(c.cert.lines[1], W/2, 398);
   hexPath(ctx,W/2,540,92); ctx.fillStyle=honey; ctx.fill(); ctx.strokeStyle=ink; ctx.lineWidth=6; ctx.stroke();
-  ctx.fillStyle=ink; ctx.font="700 54px Fredoka, Arial, sans-serif"; ctx.fillText(String(state.honey), W/2, 548);
+  ctx.fillStyle=ink; ctx.font="700 54px Fredoka, Arial, sans-serif"; ctx.fillText(String(cert.honey), W/2, 548);
   ctx.font="800 16px Nunito, Arial, sans-serif"; ctx.letterSpacing='2px'; ctx.fillText('HONEY DROPS', W/2, 580); ctx.letterSpacing='0px';
-  // bee
   const img=await svgImage(bee('queen','cert').replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ').replace('width="100%" height="100%"','width="320" height="290"'));
-  if(img){ ctx.drawImage(img, 150, 420, 320, 290); }
-  // date + signature
-  const d=new Date(); const date=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  if(img){ ctx.drawImage(img, 150, 420, 320, 290); if(cert.course>=2){ ctx.drawImage(img, W-470, 420, 320, 290); } }
+  const date=new Date(cert.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   ctx.fillStyle='#4A443F'; ctx.font="800 20px Nunito, Arial, sans-serif";
   ctx.textAlign='left'; ctx.fillText('Date', 160, 735); ctx.fillStyle=ink; ctx.font="700 28px Fredoka, Arial, sans-serif"; ctx.fillText(date, 160, 770);
   ctx.textAlign='right'; ctx.fillStyle='#4A443F'; ctx.font="800 20px Nunito, Arial, sans-serif"; ctx.fillText('Head beekeeper', W-160, 735); ctx.fillStyle=ink; ctx.font="700 28px Fredoka, Arial, sans-serif"; ctx.fillText(HELPER_NAME, W-160, 770);
-  ctx.textAlign='center'; ctx.fillStyle='#7A736C'; ctx.font="800 14px Nunito, Arial, sans-serif"; ctx.fillText('Code HIVE-1-'+String(state.honey).padStart(3,'0')+' · cynthia-hive.vercel.app', W/2, 780);
-  const url=c.toDataURL('image/png'); $('certimg').src=url;
-  certBlob=await new Promise(r=>c.toBlob(r,'image/png'));
-  if(HELPER_WHATSAPP){ const a=$('certsend'); a.style.display='inline-flex'; a.href='https://wa.me/'+HELPER_WHATSAPP+'?text='+encodeURIComponent('I finished Course 1 of the Hive! Honey: '+state.honey+'. Certificate attached.'); }
+  ctx.textAlign='center'; ctx.fillStyle='#7A736C'; ctx.font="800 14px Nunito, Arial, sans-serif"; ctx.fillText('Code HIVE-'+cert.course+'-'+String(cert.honey).padStart(3,'0')+' · cynthia-hive.vercel.app', W/2, 780);
+  $('certimg').src=cv.toDataURL('image/png');
+  certBlob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  if(HELPER_WHATSAPP){ const a=$('certsend'); a.style.display='inline-flex'; a.href='https://wa.me/'+HELPER_WHATSAPP+'?text='+encodeURIComponent('I finished Course '+cert.course+' of the Hive! Honey: '+cert.honey+'. Certificate attached.'); }
 }
 $('certsave').onclick=async()=>{
   if(!certBlob){ toast('One second, still drawing'); return; }
@@ -655,15 +862,17 @@ function confetti(n){
 /* ---------- wire up ---------- */
 function soundLabel(){ $('sound').textContent='Sound: '+(state.sound?'on':'off'); }
 $('homebee').innerHTML=bee('happy','h');
-$('startbtn').onclick=()=>{ play('tap'); const next=CH.findIndex((_,i)=>!isDone(i)); openLesson(next<0?0:next); };
+$('startbtn').onclick=()=>{ play('tap'); if(courseDone(cc)&&cc<COURSES.length&&courseOpen(cc+1)){ setCourse(cc+1); return; } const next=CHc().findIndex((_,i)=>!isDone(i)); openLesson(next<0?0:next); };
 $('backbtn').onclick=()=>goHome();
 $('brand').onclick=()=>goHome();
 $('qhome').onclick=()=>goHome();
+$('certsbtn').onclick=()=>{ play('tap'); showCerts(); };
+$('certsback').onclick=()=>goHome();
 $('sound').onclick=()=>{ state.sound=!state.sound; save(); soundLabel(); if(state.sound) play('tap'); };
-$('reset').onclick=()=>{ if(!state.done.length&&!state.honey){toast('Nothing to reset yet');return;} state.done=[]; state.honey=0; save(); progress(); layoutComb(); toast('Fresh honeycomb'); };
+$('reset').onclick=()=>{ if(!doneList().length){toast('Nothing to reset in this course');return;} state.courses[cc].done=[]; save(); setCourse(cc); toast('Fresh honeycomb for Course '+cc); };
 window.addEventListener('resize',()=>{ if($('home').classList.contains('on')) layoutComb(); });
-soundLabel(); progress(); layoutComb();
-if(state.done.length===N){ $('hellotxt').textContent='Queen of the Hive. Come back any time to refresh a cell.'; }
+soundLabel();
+setCourse(courseDone(1)&&courseOpen(2)&&!courseDone(2) ? 2 : 1);
 </script>
 </body>
 </html>
