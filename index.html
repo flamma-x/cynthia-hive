@@ -38,12 +38,17 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
 @media(min-width:700px){.app{padding:32px 48px 48px}}
 
 /* header */
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0}
-.brand span{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;white-space:nowrap}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.brand{display:flex;align-items:center;gap:8px;background:none;border:0;padding:0;min-width:0;flex:1 1 auto;overflow:hidden}
+.brand svg{flex:none}
+.brand span{font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(min-width:700px){.brand span{font-size:22px}}
-.stats{display:flex;gap:8px}
-.pill{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px;white-space:nowrap}
+.stats{display:flex;gap:6px;flex:none}
+.pill{display:flex;align-items:center;gap:6px;border:3px solid var(--ink);border-radius:999px;padding:5px 10px;font-weight:800;font-size:12px;white-space:nowrap;min-height:36px}
+@media(max-width:430px){.bar{display:none}}
+.brand .short{display:none}
+@media(max-width:560px){.brand .full{display:none}.brand .short{display:inline}}
+@media(min-width:700px){.pill{gap:8px;padding:6px 12px;font-size:13px}.stats{gap:8px}}
 .pill svg{width:16px;height:18px}
 .pill.honeyp{background:var(--honey-soft)}
 .pill.honeyp.bump{animation:pop .4s}
@@ -159,8 +164,9 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
 .cert{width:100%;max-width:640px;border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--honey);margin-top:10px;background:#fff}
 .certbtn{background:#fff}
 .certbtn svg{width:18px;height:18px}
-.tabs{display:flex;gap:8px;margin-top:26px}
-.tab{border:3px solid var(--ink);background:#fff;border-radius:999px;padding:8px 16px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px;min-height:44px}
+.tabs{display:flex;gap:8px;margin-top:26px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:3px solid var(--ink);background:#fff;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;min-height:44px;white-space:nowrap;flex:none}
 .tab.on{background:var(--honey)}
 .tab:disabled{opacity:.5}
 .tab svg{width:14px;height:14px}
@@ -183,7 +189,7 @@ h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacin
   <header class="top">
     <button class="brand" id="brand" aria-label="Home">
       <svg width="34" height="38" viewBox="0 0 34 38" aria-hidden="true"><polygon points="17,1 33,10 33,28 17,37 1,28 1,10" fill="#FFC72C" stroke="#1F1A17" stroke-width="3"/></svg>
-      <span>Cynthia and the Hive</span>
+      <span class="full">Cynthia and the Hive</span><span class="short">The Hive</span>
     </button>
     <div class="stats" aria-live="polite">
       <div class="pill"><div class="bar"><i id="barfill" style="width:0%"></i></div><span id="score">0 / 9</span></div>
