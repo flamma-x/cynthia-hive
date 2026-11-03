@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cynthia and the Hive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+:root{
+  --ink:#1F1A17; --honey:#FFC72C; --honey-soft:#FFF3C4; --honey-deep:#E8A600;
+  --grey:#7A736C; --text2:#4A443F; --wing:#EAF6FF; --cheek:#FFB3B3; --white:#fff;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font-family:'Nunito',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding-top:var(--sat);padding-bottom:var(--sab)}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;letter-spacing:-.02em}
+.app{max-width:900px;margin:0 auto;padding:20px 24px 40px;min-height:100vh;display:flex;flex-direction:column}
+@media(min-width:700px){.app{padding:32px 48px 48px}}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0}
+.brand span{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;white-space:nowrap}
+@media(min-width:700px){.brand span{font-size:22px}}
+.stats{display:flex;gap:8px}
+.pill{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px;white-space:nowrap}
+.pill svg{width:16px;height:18px}
+.pill.honeyp{background:var(--honey-soft)}
+.pill.honeyp.bump{animation:pop .4s}
+.bar{width:48px;height:10px;border-radius:999px;background:var(--honey-soft);overflow:hidden}
+@media(min-width:700px){.bar{width:110px}}
+.bar i{display:block;height:100%;background:var(--honey);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+
+/* screens */
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex}
+
+/* home */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin-top:18px}
+@media(min-width:700px){.hero{flex-direction:row;text-align:left;justify-content:space-between;align-items:center;gap:24px;margin-top:28px}.hero .txt{align-items:flex-start}}
+.hero .txt{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:460px}
+.tag{background:var(--honey-soft);border-radius:999px;padding:6px 12px;font-weight:800;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.tag.dark{background:var(--ink);color:#fff}
+.hero h1{font-size:clamp(52px,11vw,84px);line-height:.95}
+.hero p{margin:0;font-size:clamp(16px,2.2vw,21px);line-height:1.35;font-weight:600;color:var(--text2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--honey);color:var(--ink);border:3px solid var(--ink);border-radius:999px;padding:13px 24px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:20px;box-shadow:4px 4px 0 var(--ink);transition:transform .08s,box-shadow .08s;text-decoration:none;min-height:52px}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.ghost{background:#fff;box-shadow:none}
+.btn.ghost:active{transform:none}
+.btn.sm{font-size:17px;padding:10px 18px;min-height:46px}
+.bee-hero{width:150px;height:136px;flex:none}
+@media(min-width:700px){.bee-hero{width:260px;height:236px}}
+
+.comb-title{margin-top:26px;font-size:22px;display:flex;align-items:baseline;gap:10px}
+.comb-title small{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--grey)}
+@media(min-width:700px){.comb-title{font-size:26px}}
+.comb{position:relative;margin:10px auto 0;width:100%}
+.cell{position:absolute;background:none;border:0;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.cell>svg{position:absolute;inset:0;width:100%;height:100%}
+.cell .in{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;padding:0 14%;color:var(--grey)}
+.cell .n{font-family:'Fredoka',sans-serif;font-weight:700;font-size:26px;line-height:1}
+.cell .t{font-weight:800;font-size:12px;line-height:1.15}
+@media(min-width:700px){.cell .n{font-size:36px}.cell .t{font-size:15px}}
+.cell.open .in,.cell.done .in{color:var(--ink)}
+.cell .lock{width:16px;height:16px}
+.cell .chip{font-weight:700;font-size:11px;background:var(--ink);color:#fff;border-radius:999px;padding:3px 8px;margin-top:2px}
+.cell:active{transform:scale(.96)}
+.cell.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.cell.pop{animation:pop .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.foot{margin-top:auto;padding-top:30px;display:flex;justify-content:center;gap:22px}
+.link{background:none;border:0;color:var(--grey);font-weight:700;font-size:13px;text-decoration:underline;padding:8px 0}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(24px + var(--sab));transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;z-index:9}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+/* lesson */
+.lhead{display:flex;align-items:center;gap:10px;margin-top:10px}
+.back{width:46px;height:46px;border-radius:999px;border:3px solid var(--ink);background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.lhead h2{font-size:clamp(20px,4vw,30px);line-height:1.1}
+.lhead .num{font-size:12px;font-weight:800;color:var(--grey);text-transform:uppercase;letter-spacing:.05em;display:block;font-family:'Nunito',sans-serif}
+.dots{display:flex;gap:6px;margin:16px 0 6px}
+.dots i{flex:1;height:8px;border-radius:999px;background:var(--honey-soft);transition:background .3s}
+.dots i.on{background:var(--honey)}
+.dots i.now{background:var(--ink)}
+
+.stage{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:18px;flex:1}
+@media(min-width:700px){.stage{flex-direction:row;align-items:flex-start;gap:28px;margin-top:28px}}
+.bee-wrap{width:150px;height:136px;flex:none;transition:transform .3s}
+@media(min-width:700px){.bee-wrap{width:220px;height:200px;position:sticky;top:20px}}
+.bee-wrap.yay{animation:bounce .6s}
+.bee-wrap.hmm{animation:wobble .5s}
+@keyframes bounce{0%{transform:translateY(0)}40%{transform:translateY(-22px) rotate(-6deg)}70%{transform:translateY(0)}85%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+@keyframes wobble{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.bubble{position:relative;flex:1;width:100%;border:3px solid var(--ink);border-radius:24px;padding:22px 22px;background:#fff;box-shadow:5px 5px 0 var(--honey);animation:in .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.bubble:before{content:"";position:absolute;top:-16px;left:50%;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:16px solid var(--ink)}
+.bubble:after{content:"";position:absolute;top:-11px;left:50%;margin-left:-7px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid #fff}
+@media(min-width:700px){
+  .bubble:before{top:28px;left:-16px;margin:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-right:16px solid var(--ink);border-left:0}
+  .bubble:after{top:31px;left:-11px;margin:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:12px solid #fff;border-left:0}
+}
+.bubble h3{font-size:clamp(22px,4vw,30px);margin-bottom:10px;line-height:1.1}
+.bubble p{margin:0;font-size:clamp(17px,2.4vw,21px);line-height:1.45;font-weight:600;color:var(--text2)}
+.bubble p+p{margin-top:12px}
+.ex{position:relative;margin-top:14px;background:var(--honey-soft);border-radius:14px;padding:12px 14px;font-weight:700;font-size:16px;line-height:1.4;color:var(--ink);white-space:pre-line}
+.ex b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);margin-bottom:4px;font-family:'Nunito',sans-serif}
+.ex.script{font-family:'Courier New',monospace;font-size:14px;font-weight:700}
+.ex.has-copy{padding-right:88px}
+.copy{position:absolute;top:10px;right:10px;border:2.5px solid var(--ink);background:#fff;border-radius:999px;padding:6px 12px;font-weight:800;font-size:12px;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:6px;min-height:34px}
+.copy.ok{background:var(--honey)}
+.tip{display:flex;gap:10px;margin-top:14px;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 14px;font-weight:700;font-size:15px;line-height:1.4;color:var(--ink);background:#fff}
+.tip svg{width:22px;height:22px;flex:none;margin-top:1px}
+.tip b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);margin-bottom:2px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;align-items:center}
+.help{margin-left:auto;background:none;border:0;color:var(--grey);font-weight:800;font-size:14px;text-decoration:underline;padding:8px 0}
+.answers{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.ans{display:flex;align-items:center;gap:12px;border:3px solid var(--ink);border-radius:18px;background:#fff;padding:12px 14px;text-align:left;font-weight:700;font-size:17px;line-height:1.3;min-height:56px;transition:background .2s,transform .1s}
+.ans .mini{width:40px;height:36px;flex:none}
+.ans:active{transform:scale(.98)}
+.ans.good{background:var(--honey)}
+.ans.bad{animation:shake .4s}
+.ans:disabled{opacity:.55}
+.ans.good:disabled{opacity:1}
+.verdict{margin-top:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;min-height:28px}
+.verdict.good{color:var(--honey-deep)}
+.verdict.bad{color:var(--grey)}
+.earn{display:inline-flex;align-items:center;gap:6px;background:var(--honey-soft);border-radius:999px;padding:4px 12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-left:10px;vertical-align:middle}
+.earn svg{width:14px;height:16px}
+
+/* finish */
+.finish{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;margin-top:30px;flex:1}
+.finish h2{font-size:clamp(40px,9vw,72px);line-height:.95}
+.finish p{margin:0;font-size:19px;font-weight:600;color:var(--text2);max-width:460px}
+.finish .bee-wrap{width:200px;height:182px;position:static}
+.drops{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:320px}
+.drops svg{width:30px;height:34px;animation:pop .5s backwards}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.confetti i{position:absolute;top:-30px;width:16px;height:18px;background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <button class="brand" id="brand" aria-label="Home">
+      <svg width="34" height="38" viewBox="0 0 34 38" aria-hidden="true"><polygon points="17,1 33,10 33,28 17,37 1,28 1,10" fill="#FFC72C" stroke="#1F1A17" stroke-width="3"/></svg>
+      <span>Cynthia and the Hive</span>
+    </button>
+    <div class="stats" aria-live="polite">
+      <div class="pill"><div class="bar"><i id="barfill" style="width:0%"></i></div><span id="score">0 / 9</span></div>
+      <div class="pill honeyp" id="honeypill" title="Honey drops"><svg viewBox="-3 -3 36 40" aria-hidden="true"><path d="M15 2 C15 2 3 16 3 22 a12 12 0 0 0 24 0 C27 16 15 2 15 2Z" fill="#FFC72C" stroke="#1F1A17" stroke-width="3" stroke-linejoin="round"/></svg><span id="honey">0</span></div>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="screen on" id="home">
+    <div class="hero">
+      <div class="bee-hero" id="homebee"></div>
+      <div class="txt">
+        <span class="tag dark">Course 1 · Made for Cynthia</span>
+        <h1 id="hello">Hi Cynthia!</h1>
+        <p id="hellotxt">Let's learn Claude together. One honeycomb cell at a time, no tech talk, lots of costumes.</p>
+        <button class="btn" id="startbtn">Start buzzing
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+    <h2 class="comb-title">Your honeycomb <small>9 cells</small></h2>
+    <div class="comb" id="comb"></div>
+    <div class="foot"><button class="link" id="sound">Sound: on</button><button class="link" id="reset">Start over</button></div>
+  </section>
+
+  <!-- LESSON -->
+  <section class="screen" id="lesson">
+    <div class="lhead">
+      <button class="back" id="backbtn" aria-label="Back to the hive">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg>
+      </button>
+      <h2><span class="num" id="lnum">Cell 1</span><span id="ltitle">Meet Claude</span></h2>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="stage">
+      <div class="bee-wrap" id="lbee"></div>
+      <div class="bubble" id="bubble"></div>
+    </div>
+  </section>
+
+  <!-- QUEEN -->
+  <section class="screen" id="queen">
+    <div class="finish">
+      <div class="bee-wrap" id="qbee"></div>
+      <h2>Queen Cynthia!</h2>
+      <p>Every cell is full of honey. You know Claude now. Go make something beautiful.</p>
+      <div class="drops" id="drops"></div>
+      <button class="btn" id="qhome">Back to the hive</button>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<div class="confetti" id="confetti"></div>
+
+<script>
+/* ---------- settings ---------- */
+const HELPER_NAME = 'Tarek';
+const HELPER_WHATSAPP = ''; // put the number with country code, digits only, e.g. 9617xxxxxxx. Empty = no link, text only.
+
+/* ---------- content ---------- */
+const SAMPLE_SCRIPT = `INT. BRIDAL SHOP - DAY
+
+NOUR (28) stands at the mirror in a simple white dress, the hem pinned. LAYLA, her mother (55), in a navy skirt suit, holds up a second dress with long sleeves.
+
+LAYLA
+Try the one with the sleeves.
+
+NOUR
+Mama. It's August.
+
+Nour takes the dress anyway. A glass of red wine tips off the counter and splashes the white hem.
+
+EXT. STREET - CONTINUOUS
+
+Nour runs out, still in the stained white dress, Layla's navy jacket thrown over her shoulders.`;
+
+const CH = [
+{ title:"Getting Claude", short:"Getting Claude",
+  cards:[
+    {h:"First, let's get Claude.", p:["Claude is an app, like WhatsApp. On your iPad open the App Store and search 'Claude'. Download it. It's free to start."], tip:"No iPad nearby? On any computer go to claude.ai in the browser. Same thing."},
+    {h:"Make an account.", p:["Open the app, tap Sign up. Use your Google account or your email. One minute, done."]},
+    {h:"Free or paid?", p:["Free is enough for this course. The paid plan gives you more messages and more tools. Ask "+HELPER_NAME+" which one you need before paying."]},
+    {h:"The screen, explained.", p:["The box at the bottom is where you type. Next to it: a + button to add files and photos, and a mic to talk. Your old chats are in the side menu."], tip:"Pasting on iPad: hold your finger inside the text box, then tap Paste."},
+    {h:"New chat, new topic.", p:["Each chat is one conversation. When you start a new subject, start a new chat. Look for the pencil or 'New chat' button."]},
+  ],
+  task:{p:"Download Claude, sign in, and open a new chat. Then just type:", ex:"Hello!"},
+  quiz:[
+    {q:"Where do you get Claude on iPad?", a:["App Store, search 'Claude'","The tailor","A USB stick"], c:0},
+    {q:"The + button next to the text box is for...", a:["Adding files and photos","Making the text bigger","Calling someone"], c:0},
+    {q:"How do you paste text on iPad?", a:["Hold your finger in the box, tap Paste","Shake the iPad","Say 'paste' out loud"], c:0},
+  ]},
+{ title:"Meet Claude", short:"Meet Claude",
+  cards:[
+    {h:"Hi, I'm your bee.", p:["Claude is a very smart assistant that read almost every book in the world. You talk to it like a friend, and it talks back."]},
+    {h:"It's just a chat.", p:["You type, or tap the mic and talk. Claude writes back. No buttons to learn, no menus."]},
+    {h:"It can read your stuff.", p:["Give it a script, a PDF, a photo, a spreadsheet. It reads it and you ask questions about it."], tip:"Tap + next to the text box, then pick a file or a photo."},
+    {h:"It never gets tired.", p:["Ask the same question ten times. Ask a silly question. It's fine. Nobody is judging."]},
+    {h:"Rule number one.", p:["Claude can be wrong. Always double check names, dates and numbers before you act on them."]},
+  ],
+  task:{p:"Go to Claude, open a new chat, paste this and send:", ex:"Hi Claude, I'm Cynthia, a costume designer for film. What can you help me with?"},
+  quiz:[
+    {q:"What is Claude?", a:["A chat assistant you talk to","A sewing machine","A film camera"], c:0},
+    {q:"Can Claude read a script you give it?", a:["Yes","No","Only on Tuesdays"], c:0},
+    {q:"Should you double check what Claude says?", a:["Always","Never"], c:0},
+  ]},
+{ title:"Your first prompts", short:"First prompts",
+  cards:[
+    {h:"A prompt is what you type.", p:["Think of it as briefing a new assistant on day one. The better the brief, the better the work."]},
+    {h:"The magic recipe.", p:["Who you are + what you want + how you want it."], ex:{b:"Example", t:"I'm a costume designer. Make a packing list for a 3-day desert shoot. Short bullet points."}},
+    {h:"Give context.", p:["Bad: 'Dress ideas.'","Good: 'Dress ideas for a 1970s Beirut wedding scene, the bride's mother, modest, warm colors.'"]},
+    {h:"Not happy? Just say so.", p:["'Shorter.' 'More options.' 'Make it cheaper.' Claude remembers the whole chat, so you don't repeat yourself."], tip:"Reply in the same chat. Don't open a new one, or Claude forgets what you were doing."},
+    {h:"Projects.", p:["A Project is a folder where Claude keeps your files and your rules for one production. Make one Project per series."], tip:"Projects are in the side menu. Tap 'New project', give it the series name."},
+  ],
+  task:{p:"In Claude, paste this with your own character's name. When the answer comes, type 'Make them cheaper.'", ex:"Give me 5 outfit ideas for [character name], a [age] year old [job] in [city, year]."},
+  quiz:[
+    {q:"Which prompt is better?", a:["5 costume ideas for a 1990s taxi driver in Beirut, realistic, low budget","Costumes"], c:0},
+    {q:"The answer is too long. What do you type?", a:["Shorter please","Nothing, start a new app","Give up"], c:0},
+    {q:"What is a Project?", a:["A folder for one production's files and rules","A movie","A sewing pattern"], c:0},
+  ]},
+{ title:"Script breakdowns", short:"Script breakdowns",
+  cards:[
+    {h:"Give it the script.", p:["Paste it, or upload the file with +. Then ask."], ex:{b:"Try", t:"List every scene with characters, time of day and costume notes."}, tip:"Long script? Upload the PDF with + instead of pasting. Claude reads the whole thing."},
+    {h:"Ask for a table.", p:["Scene, character, costume, changes, continuity notes. Claude builds it in seconds."]},
+    {h:"Ask the hard questions.", p:["'Which scenes are continuous?' 'Where does the dress get stained?' 'How many changes for Nour?'"]},
+    {h:"Make it a file.", p:["Say 'put this in a spreadsheet' and download it. Or send it straight to Google Sheets (cell 5)."]},
+    {h:"Here's a practice scene.", p:["Copy this little scene. It has a stain and a borrowed jacket hiding in it. Let's see if Claude catches them."], ex:{b:"Sample scene", t:SAMPLE_SCRIPT, script:true}},
+  ],
+  task:{p:"This box has the scene and the question together. One copy, one paste:", ex:"Make a costume breakdown per character for this scene, and flag any continuity notes.\n\n"+SAMPLE_SCRIPT},
+  quiz:[
+    {q:"First step for a breakdown?", a:["Give Claude the script","Buy fabric","Call the director"], c:0},
+    {q:"Can Claude track continuity across scenes?", a:["Yes","No"], c:0},
+    {q:"How do you get it as a file?", a:["Say 'put this in a spreadsheet'","Print the chat","Take a photo of the screen"], c:0},
+  ]},
+{ title:"Mood boards and lookbooks", short:"Mood boards",
+  cards:[
+    {h:"Claude makes slides.", p:[""], ex:{b:"Say", t:"Make a lookbook presentation for the lead character, 10 slides, one look per slide."}},
+    {h:"Claude Design makes boards.", p:["Color palettes, layouts, posters. Say 'design a mood board page, earthy 70s palette'. It draws it."], tip:"The result opens in a panel next to the chat. Look for Download or Export at the top of that panel."},
+    {h:"Give it your pictures.", p:["Upload your references and fitting photos with +. Claude arranges them and writes the captions."]},
+    {h:"Change it with words.", p:["'More vintage.' 'Less text.' 'Bigger photos.' It edits, you don't start over."]},
+    {h:"Send it.", p:["Export as PDF and send it to the director. Done before lunch."]},
+  ],
+  task:{p:"Paste this in Claude:", ex:"Make a 5-slide lookbook for [character name], [era], [mood]. One look per slide with a short caption."},
+  quiz:[
+    {q:"Can Claude make a presentation?", a:["Yes","No"], c:0},
+    {q:"To change a board you...", a:["Say what to change, like 'less text'","Start again from zero","Email Anthropic"], c:0},
+    {q:"How do you give it to the director?", a:["Export PDF","Screenshot every slide","Describe it on the phone"], c:0},
+  ]},
+{ title:"Drive and Sheets", short:"Drive and Sheets",
+  cards:[
+    {h:"Meet the connector.", p:["A connector is a cable between Claude and an app you already use. Google Drive, Gmail, Calendar, Sheets."]},
+    {h:"No more uploading.", p:["Once connected, you say 'find my wardrobe budget sheet' and Claude opens it by itself."]},
+    {h:"It can write too.", p:[""], ex:{b:"Say", t:"Add a row: Scene 12, Nour, red coat, rented."}},
+    {h:"Turning it on.", p:["Go to Settings, then Connectors. Pick Google Drive, log in once. That's it."], tip:"Settings is under your name or initials in the side menu. Can't find Connectors? Ask "+HELPER_NAME+"."},
+    {h:"You are the boss.", p:["Claude only sees what you allow. You can unplug any connector any time."]},
+  ],
+  task:{p:"Connect Google Drive. Then paste this with a real file name:", ex:"Find my file called [file name] and tell me what's inside."},
+  quiz:[
+    {q:"A connector is...", a:["A cable between Claude and your apps","A new phone","A kind of fabric"], c:0},
+    {q:"After connecting Drive, do you still upload files?", a:["No, just ask for them by name","Yes, always"], c:0},
+    {q:"Where do you turn it on?", a:["Settings, Connectors","Inside the script","At the tailor"], c:0},
+  ]},
+{ title:"Making images", short:"Making images",
+  cards:[
+    {h:"Claude doesn't paint alone.", p:["But it talks to image apps that do. Claude directs, the image app draws."]},
+    {h:"Higgsfield plugs in.", p:["Connect it like Drive, from the same Connectors page. Then just ask."], ex:{b:"Say", t:"Generate a 1970s Beirut bride, full body, white background."}},
+    {h:"Midjourney, the other way.", p:["Midjourney has no cable to Claude right now. So Claude writes the perfect prompt, you copy it and paste it in Midjourney."], tip:"Hold your finger on Claude's answer, tap Copy. Then paste it in Midjourney."},
+    {h:"Use it for...", p:["Fitting previews. Mood images. Showing the director 3 options before you buy a single button."]},
+    {h:"Details make the picture.", p:["Always say: era, style, body type, colors, background. More detail, better image."]},
+  ],
+  task:{p:"Paste this in Claude, then run one of the prompts in Higgsfield or Midjourney:", ex:"Write 3 image prompts for [character name], [era], [mood]. Full body, plain background."},
+  quiz:[
+    {q:"Who draws the image?", a:["The image app, Claude directs","Claude's pencil","The assistant director"], c:0},
+    {q:"A good image prompt has...", a:["Era, style, colors, background","Just the word 'dress'"], c:0},
+    {q:"How does Midjourney work with Claude?", a:["Claude writes the prompt, you paste it","It connects by itself"], c:0},
+  ]},
+{ title:"Plugs and cables", short:"Plugs and cables",
+  cards:[
+    {h:"MCP is a plug standard.", p:["Like USB-C. Any app with an MCP plug can connect to Claude. That's the whole idea."]},
+    {h:"Connectors are MCP plugs.", p:["Remember cell 5? Those connectors are MCP plugs with friendly names. Same thing."]},
+    {h:"API is for developers.", p:["It lets a programmer put Claude inside their own app. You will never need it. "+HELPER_NAME+" might."]},
+    {h:"Skills are recipe cards.", p:["A skill teaches Claude how you like something done. 'This is how I format my breakdowns.' Save it once, reuse forever."]},
+    {h:"Now you speak the language.", p:["If someone asks 'does it have an MCP?' they mean 'can it plug into Claude?'"], tip:"You don't need to remember these words. Just know they all mean 'plug'."},
+  ],
+  task:{p:"Paste this in Claude:", ex:"Explain MCP to me like I'm five, with a costume example."},
+  quiz:[
+    {q:"MCP is...", a:["A plug standard so apps connect to Claude","A camera lens","A type of thread"], c:0},
+    {q:"Who needs the API?", a:["Developers","Every costume designer"], c:0},
+    {q:"'Does it have an MCP?' means...", a:["Can it plug into Claude?","Is it expensive?","Is it washable?"], c:0},
+  ]},
+{ title:"On set with Claude", short:"On set",
+  cards:[
+    {h:"Morning.", p:["Photograph the call sheet. Ask: 'Which scenes today, which characters, which costumes?'"], tip:"Tap +, then Camera, to take the photo straight from Claude."},
+    {h:"Continuity.", p:["Photo of the actor. Say 'note this as the scene 14 look for Nour'. Days later: 'what did Nour wear in scene 14?'"], tip:"Keep one chat per shoot day, or one Project per series, so Claude can find it later."},
+    {h:"Shopping.", p:[""], ex:{b:"Say", t:"Make a shopping list from the breakdown for scenes 20 to 30, grouped by shop."}},
+    {h:"Messages.", p:["'Write a short message to the producer asking for the fitting budget.' Copy, paste, send."]},
+    {h:"Hands full of pins?", p:["Tap the mic and talk. Claude types. Your hands stay on the costume."], tip:"Tap the mic once to start, once to stop."},
+  ],
+  task:{p:"Photograph today's call sheet with + and send it with this:", ex:"What do I need to prep for tomorrow? Costumes, characters, and anything I should double check."},
+  quiz:[
+    {q:"Can you send Claude a photo of the call sheet?", a:["Yes","No"], c:0},
+    {q:"Hands full of pins. How do you talk to Claude?", a:["Tap the mic and talk","Telepathy"], c:0},
+    {q:"Best uses of Claude on set?", a:["Breakdowns, continuity, lists, messages","Sewing the hems"], c:0},
+  ]},
+];
+const N = CH.length;
+
+/* ---------- bee drawing ---------- */
+function bee(mood, id){
+  mood = mood || 'happy';
+  const eyes = mood==='yay'
+    ? '<path d="M56 132 Q68 118 80 132" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/><path d="M98 132 Q110 118 122 132" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/>'
+    : '<circle cx="68" cy="130" r="15" fill="#fff" stroke="#1F1A17" stroke-width="5"/><circle cx="110" cy="130" r="15" fill="#fff" stroke="#1F1A17" stroke-width="5"/>'
+      + (mood==='hmm'
+        ? '<circle cx="66" cy="136" r="7" fill="#1F1A17"/><circle cx="108" cy="136" r="7" fill="#1F1A17"/><path d="M96 106 L124 112" fill="none" stroke="#1F1A17" stroke-width="5" stroke-linecap="round"/>'
+        : '<circle cx="72" cy="133" r="7" fill="#1F1A17"/><circle cx="114" cy="133" r="7" fill="#1F1A17"/><circle cx="75" cy="130" r="2.5" fill="#fff"/><circle cx="117" cy="130" r="2.5" fill="#fff"/>');
+  const mouth = mood==='yay' ? '<path d="M68 160 Q92 192 116 160 Z" fill="#1F1A17"/><path d="M80 174 Q92 182 104 174 Z" fill="#FFB3B3"/>'
+    : mood==='hmm' ? '<circle cx="92" cy="170" r="8" fill="none" stroke="#1F1A17" stroke-width="5"/>'
+    : '<path d="M72 162 Q92 182 112 162" fill="none" stroke="#1F1A17" stroke-width="5" stroke-linecap="round"/>';
+  const crown = mood==='queen' ? '<path d="M50 84 L58 50 L76 70 L92 42 L108 70 L126 50 L134 84 Z" fill="#FFC72C" stroke="#1F1A17" stroke-width="5" stroke-linejoin="round"/><circle cx="58" cy="50" r="5" fill="#1F1A17"/><circle cx="92" cy="42" r="5" fill="#1F1A17"/><circle cx="126" cy="50" r="5" fill="#1F1A17"/>' : '';
+  const ant = mood==='queen' ? '' : '<path d="M60 80 Q50 44 28 36" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/><circle cx="26" cy="34" r="9" fill="#1F1A17"/><path d="M100 68 Q104 34 126 22" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/><circle cx="128" cy="20" r="9" fill="#1F1A17"/>';
+  return `<svg viewBox="0 0 320 290" width="100%" height="100%" role="img" aria-label="Bee guide">
+<g><ellipse cx="185" cy="88" rx="58" ry="34" fill="#EAF6FF" stroke="#1F1A17" stroke-width="6" transform="rotate(-30 185 88)"/><ellipse cx="240" cy="100" rx="52" ry="30" fill="#EAF6FF" stroke="#1F1A17" stroke-width="6" transform="rotate(-10 240 100)"/></g>
+<path d="M266 176 L300 186 L266 198 Z" fill="#1F1A17"/>
+<ellipse cx="180" cy="186" rx="96" ry="74" fill="#FFC72C" stroke="#1F1A17" stroke-width="6"/>
+<clipPath id="bc${id}"><ellipse cx="180" cy="186" rx="93" ry="71"/></clipPath>
+<rect x="150" y="100" width="30" height="180" fill="#1F1A17" clip-path="url(#bc${id})"/><rect x="208" y="100" width="30" height="180" fill="#1F1A17" clip-path="url(#bc${id})"/>
+<path d="M150 250 Q140 274 122 280" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/><path d="M190 258 Q188 280 170 286" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/>
+${ant}
+<circle cx="92" cy="140" r="62" fill="#FFC72C" stroke="#1F1A17" stroke-width="6"/>
+${crown}
+${eyes}
+<circle cx="52" cy="160" r="8" fill="#FFB3B3"/><circle cx="128" cy="160" r="8" fill="#FFB3B3"/>
+${mouth}
+<rect x="20" y="206" width="118" height="30" rx="10" fill="#fff" stroke="#1F1A17" stroke-width="5"/>
+<path d="M36 206v12 M52 206v8 M68 206v12 M84 206v8 M100 206v12 M116 206v8" fill="none" stroke="#1F1A17" stroke-width="4" stroke-linecap="round"/>
+<path d="M46 214 Q40 196 56 190" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/><path d="M118 214 Q126 198 112 192" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round"/>
+</svg>`;
+}
+const miniBee = '<svg class="mini" viewBox="0 0 60 50" aria-hidden="true"><ellipse cx="34" cy="14" rx="12" ry="7" fill="#EAF6FF" stroke="#1F1A17" stroke-width="3" transform="rotate(-25 34 14)"/><ellipse cx="34" cy="30" rx="20" ry="15" fill="#FFC72C" stroke="#1F1A17" stroke-width="3"/><path d="M30 16v28 M40 17v26" stroke="#1F1A17" stroke-width="5"/><circle cx="16" cy="28" r="12" fill="#FFC72C" stroke="#1F1A17" stroke-width="3"/><circle cx="13" cy="26" r="2.5" fill="#1F1A17"/><circle cx="20" cy="26" r="2.5" fill="#1F1A17"/><path d="M12 32q4 4 8 0" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round"/></svg>';
+const drop = '<svg viewBox="-3 -3 36 40" aria-hidden="true"><path d="M15 2 C15 2 3 16 3 22 a12 12 0 0 0 24 0 C27 16 15 2 15 2Z" fill="#FFC72C" stroke="#1F1A17" stroke-width="3" stroke-linejoin="round"/></svg>';
+const bulb = '<svg viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>';
+const copyIco = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F1A17" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+
+/* ---------- state ---------- */
+const KEY='cynthia-hive-v2';
+let state={done:[],honey:0,sound:true};
+try{ const s=localStorage.getItem(KEY); if(s) state=Object.assign(state,JSON.parse(s)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const isDone=i=>state.done.includes(i);
+const isOpen=i=>i===0||isDone(i-1)||isDone(i);
+
+/* ---------- sound ---------- */
+let AC=null;
+function tone(f,t0,d,type,g){ const o=AC.createOscillator(),v=AC.createGain(); o.type=type||'sine'; o.frequency.value=f; v.gain.setValueAtTime(0,t0); v.gain.linearRampToValueAtTime(g||.18,t0+.02); v.gain.exponentialRampToValueAtTime(.001,t0+d); o.connect(v).connect(AC.destination); o.start(t0); o.stop(t0+d+.05); }
+function play(kind){
+  if(!state.sound) return;
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    const t=AC.currentTime;
+    if(kind==='buzz'){ // happy buzz + rising ding
+      const o=AC.createOscillator(),v=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();
+      o.type='sawtooth'; o.frequency.setValueAtTime(170,t); o.frequency.linearRampToValueAtTime(230,t+.25);
+      l.frequency.value=28; lg.gain.value=18; l.connect(lg).connect(o.frequency); l.start(t); l.stop(t+.3);
+      v.gain.setValueAtTime(0,t); v.gain.linearRampToValueAtTime(.12,t+.03); v.gain.exponentialRampToValueAtTime(.001,t+.3);
+      o.connect(v).connect(AC.destination); o.start(t); o.stop(t+.32);
+      tone(660,t+.28,.18,'sine',.15); tone(880,t+.42,.28,'sine',.15);
+    } else if(kind==='nope'){ tone(220,t,.18,'triangle',.12); tone(180,t+.16,.26,'triangle',.12); }
+    else if(kind==='tap'){ tone(520,t,.07,'sine',.08); }
+    else if(kind==='win'){ [523,659,784,1046].forEach((f,i)=>tone(f,t+i*.12,.3,'sine',.14)); }
+  }catch(e){}
+}
+
+/* ---------- dom helpers ---------- */
+const $=id=>document.getElementById(id);
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo(0,0); }
+let toastT; function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),1800); }
+function progress(){ const n=state.done.length; $('score').textContent=n+' / '+N; $('barfill').style.width=(n/N*100)+'%'; $('honey').textContent=state.honey; }
+function addHoney(n){ state.honey+=n; save(); progress(); const p=$('honeypill'); p.classList.remove('bump'); void p.offsetWidth; p.classList.add('bump'); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function copyText(txt, btn){
+  const ok=()=>{ btn.classList.add('ok'); btn.innerHTML=copyIco+'Copied'; toast('Copied. Now paste it in Claude.'); play('tap'); setTimeout(()=>{btn.classList.remove('ok'); btn.innerHTML=copyIco+'Copy';},2000); };
+  const fallback=()=>{ try{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); const r=document.execCommand('copy'); ta.remove(); if(r) ok(); else toast('Hold your finger on the text and copy it'); }catch(e){ toast('Hold your finger on the text and copy it'); } };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok).catch(fallback); } else fallback();
+}
+function exBox(ex){ // {b,t,script}
+  return `<div class="ex has-copy${ex.script?' script':''}"><b>${ex.b}</b>${esc(ex.t)}<button class="copy" data-copy="${esc(ex.t).replace(/"/g,'&quot;').replace(/\n/g,'&#10;')}">${copyIco}Copy</button></div>`;
+}
+function tipBox(t){ return t?`<div class="tip">${bulb}<div><b>Tip</b>${t}</div></div>`:''; }
+function wireCopy(root){ root.querySelectorAll('.copy').forEach(b=>{ b.onclick=()=>copyText(b.dataset.copy,b); }); }
+
+/* ---------- honeycomb ---------- */
+function layoutComb(){
+  const comb=$('comb'); comb.innerHTML='';
+  const W=comb.clientWidth; const s=10;
+  const rows=[[0,1,2],[3,4],[5,6,7],[8,'next']];
+  const w=Math.min(Math.floor((W-2*s)/3), 220); const h=Math.round(w*1.1547);
+  const pitch=0.75*h + s*0.866;
+  const totalW=3*w+2*s; const left=(W-totalW)/2;
+  rows.forEach((row,r)=>{
+    const off = row.length===2 ? (w+s)/2 : 0;
+    row.forEach((i,k)=>{
+      const b=document.createElement('button');
+      const next = i==='next';
+      const open=!next&&isOpen(i), done=!next&&isDone(i);
+      b.className='cell'+(done?' done':open?' open':'');
+      b.style.cssText=`left:${left+off+k*(w+s)}px;top:${r*pitch}px;width:${w}px;height:${h}px`;
+      const fill = done ? '#FFC72C' : open ? '#FFF3C4' : '#fff';
+      const lock='<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="#7A736C" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+      if(next){
+        b.innerHTML=`<svg viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true"><polygon points="50,2 97,27 97,88 50,113 3,88 3,27" fill="#fff" stroke="#7A736C" stroke-width="4" stroke-dasharray="6 5" vector-effect="non-scaling-stroke"/></svg><div class="in">${lock}<span class="t">Course 2</span><span class="t" style="font-weight:700">coming soon</span></div>`;
+        b.setAttribute('aria-label','Course 2, coming soon');
+        b.onclick=()=>{ toast('Course 2 is still in the oven'); };
+      } else {
+        b.innerHTML=`<svg viewBox="0 0 100 115.47" preserveAspectRatio="none" aria-hidden="true"><polygon points="50,2 97,27 97,88 50,113 3,88 3,27" fill="${fill}" stroke="#1F1A17" stroke-width="4" vector-effect="non-scaling-stroke"/></svg>
+          <div class="in">${open?'':lock}<span class="n">${i}</span><span class="t">${CH[i].short}</span>${done?'<span class="chip">Done</span>':open?'<span class="chip">Start</span>':''}</div>`;
+        b.setAttribute('aria-label',`Cell ${i}: ${CH[i].title}${done?', done':open?'':', locked'}`);
+        b.onclick=()=>{ if(!open){ b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); play('nope'); toast(`Fill cell ${i-1} first`); return; } play('tap'); openLesson(i); };
+      }
+      comb.appendChild(b);
+    });
+  });
+  comb.style.height=(3*pitch+h)+'px';
+}
+
+/* ---------- lesson flow ---------- */
+let cur=0, step=0, qi=0, firstTry=true;
+function openLesson(i){
+  cur=i; step=0; qi=0;
+  $('lnum').textContent='Cell '+i; $('ltitle').textContent=CH[i].title;
+  show('lesson'); render();
+}
+function total(){ return CH[cur].cards.length + 1 + CH[cur].quiz.length; }
+function dots(){
+  const d=$('dots'); d.innerHTML='';
+  const n=total(); const pos = step<=CH[cur].cards.length ? step : CH[cur].cards.length+1+qi;
+  for(let k=0;k<n;k++){ const i=document.createElement('i'); if(k<pos) i.className='on'; if(k===pos) i.className='now'; d.appendChild(i); }
+}
+function setBee(mood){ const w=$('lbee'); w.innerHTML=bee(mood,'l'); w.classList.remove('yay','hmm'); void w.offsetWidth; if(mood==='yay'||mood==='hmm') w.classList.add(mood); }
+function helpBtn(){ return `<button class="help" id="help">Help, I'm stuck</button>`; }
+function wireHelp(back){
+  const h=$('help'); if(!h) return;
+  h.onclick=()=>{
+    setBee('happy');
+    const b=$('bubble');
+    const link = HELPER_WHATSAPP ? `<a class="btn sm" href="https://wa.me/${HELPER_WHATSAPP}?text=${encodeURIComponent('Hi '+HELPER_NAME+', I\'m stuck on cell '+cur+' of the Hive: '+CH[cur].title)}" target="_blank" rel="noopener">Message ${HELPER_NAME} on WhatsApp</a>` : '';
+    b.innerHTML=`<h3>Stuck? Totally normal.</h3><p>Three things to try first:</p>
+      <p>1. Read the card again, slowly. Half the time that's it.</p>
+      <p>2. Ask Claude itself. Paste the card text and say 'explain this to me simply'.</p>
+      <p>3. Message ${HELPER_NAME}. That's what friends are for. Tell him which cell you're on: <b>cell ${cur}, ${CH[cur].title}</b>.</p>
+      <div class="actions">${link}<button class="btn ghost sm" id="hback">Back to the lesson</button></div>`;
+    $('hback').onclick=back;
+  };
+}
+function render(){
+  dots();
+  const c=CH[cur]; const b=$('bubble');
+  if(step<c.cards.length){
+    const card=c.cards[step]; setBee('happy');
+    b.innerHTML=`<h3>${card.h}</h3>${card.p.filter(Boolean).map(t=>`<p>${t}</p>`).join('')}${card.ex?exBox(card.ex):''}${tipBox(card.tip)}
+      <div class="actions">${step>0?'<button class="btn ghost sm" id="prev">Back</button>':''}<button class="btn sm" id="next">${step===c.cards.length-1?'Try it':'Next'}</button>${helpBtn()}</div>`;
+    $('next').onclick=()=>{play('tap');step++;render();};
+    if($('prev')) $('prev').onclick=()=>{step--;render();};
+    wireCopy(b); wireHelp(render);
+  } else if(step===c.cards.length){
+    setBee('happy');
+    b.innerHTML=`<h3>Your turn, Cynthia.</h3><p>${c.task.p}</p>${exBox({b:'Copy this, paste it in Claude',t:c.task.ex})}
+      <div class="tip">${bulb}<div><b>How</b>Tap Copy. Open the Claude app. Hold your finger in the text box, tap Paste, then send.</div></div>
+      <div class="actions"><button class="btn sm" id="did">I did it</button><button class="btn ghost sm" id="skip">Skip for now</button>${helpBtn()}</div>`;
+    $('did').onclick=()=>{play('buzz');addHoney(2);toast('Bzzz! +2 honey');step++;render();};
+    $('skip').onclick=()=>{step++;render();};
+    wireCopy(b); wireHelp(render);
+  } else {
+    firstTry=true; renderQuiz();
+  }
+}
+function renderQuiz(){
+  const c=CH[cur]; const q=c.quiz[qi]; const b=$('bubble'); setBee('happy');
+  const opts=q.a.map((t,k)=>({t,ok:k===q.c})).sort(()=>Math.random()-.5);
+  b.innerHTML=`<h3>Quiz ${qi+1} of ${c.quiz.length}</h3><p>${q.q}</p><div class="answers">${opts.map((o,k)=>`<button class="ans" data-k="${k}">${miniBee}<span>${o.t}</span></button>`).join('')}</div><div class="verdict" id="verdict"></div><div class="actions" id="qact">${helpBtn()}</div>`;
+  wireHelp(renderQuiz);
+  b.querySelectorAll('.ans').forEach(btn=>{
+    btn.onclick=()=>{
+      const k=+btn.dataset.k; const v=$('verdict');
+      if(opts[k].ok){
+        btn.classList.add('good'); b.querySelectorAll('.ans').forEach(x=>x.disabled=true);
+        setBee('yay'); play('buzz');
+        const gain=firstTry?1:0; if(gain) addHoney(gain);
+        v.className='verdict good'; v.innerHTML=['Bzzz! Correct','Sweet as honey','Exactly right'][qi%3]+(gain?`<span class="earn">${drop}+1</span>`:'');
+        const last=qi===c.quiz.length-1;
+        $('qact').innerHTML=`<button class="btn sm" id="qn">${last?'Fill the cell':'Next question'}</button>`;
+        $('qn').onclick=()=>{ play('tap'); if(last) finishCell(); else { qi++; firstTry=true; renderQuiz(); } };
+      } else {
+        firstTry=false;
+        btn.classList.remove('bad'); void btn.offsetWidth; btn.classList.add('bad'); btn.disabled=true;
+        setBee('hmm'); play('nope'); v.className='verdict bad'; v.textContent='Not that flower. Try again.';
+      }
+    };
+  });
+}
+function finishCell(){
+  const fresh=!isDone(cur);
+  if(fresh){ state.done.push(cur); save(); addHoney(5); }
+  progress();
+  const b=$('bubble'); setBee('yay'); play('win');
+  const all=state.done.length===N;
+  b.innerHTML=`<h3>Cell ${cur} is full of honey!</h3><p>${fresh?'<span class="earn" style="margin:0 0 8px">'+drop+'+5 honey</span><br>':''}${all?'That was the last one. Something special is waiting.':'Nice work. The next cell just unlocked.'}</p>
+    <div class="actions"><button class="btn sm" id="fin">${all?'See what happened':'Back to the hive'}</button></div>`;
+  confetti(all?90:30);
+  $('fin').onclick=()=>{ if(all) showQueen(); else goHome(cur+1); };
+}
+function goHome(popIdx){
+  show('home'); layoutComb();
+  if(popIdx!==undefined){ const cells=document.querySelectorAll('.cell'); if(cells[popIdx]) cells[popIdx].classList.add('pop'); }
+}
+function showQueen(){
+  show('queen'); $('qbee').innerHTML=bee('queen','q');
+  $('drops').innerHTML=Array.from({length:9},(_,i)=>drop.replace('<svg',`<svg style="animation-delay:${i*0.1}s"`)).join('');
+  confetti(120);
+}
+function confetti(n){
+  const c=$('confetti');
+  for(let i=0;i<n;i++){ const p=document.createElement('i'); p.style.left=Math.random()*100+'%'; p.style.animationDuration=(1.8+Math.random()*1.6)+'s'; p.style.animationDelay=(Math.random()*.6)+'s'; p.style.background=Math.random()<.3?'#1F1A17':'#FFC72C'; p.style.transform=`scale(${.6+Math.random()*.8})`; c.appendChild(p); setTimeout(()=>p.remove(),4000); }
+}
+
+/* ---------- wire up ---------- */
+function soundLabel(){ $('sound').textContent='Sound: '+(state.sound?'on':'off'); }
+$('homebee').innerHTML=bee('happy','h');
+$('startbtn').onclick=()=>{ play('tap'); const next=CH.findIndex((_,i)=>!isDone(i)); openLesson(next<0?0:next); };
+$('backbtn').onclick=()=>goHome();
+$('brand').onclick=()=>goHome();
+$('qhome').onclick=()=>goHome();
+$('sound').onclick=()=>{ state.sound=!state.sound; save(); soundLabel(); if(state.sound) play('tap'); };
+$('reset').onclick=()=>{ if(!state.done.length&&!state.honey){toast('Nothing to reset yet');return;} state.done=[]; state.honey=0; save(); progress(); layoutComb(); toast('Fresh honeycomb'); };
+window.addEventListener('resize',()=>{ if($('home').classList.contains('on')) layoutComb(); });
+soundLabel(); progress(); layoutComb();
+if(state.done.length===N){ $('hellotxt').textContent='Queen of the Hive. Come back any time to refresh a cell.'; }
+</script>
+</body>
+</html>
