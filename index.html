@@ -530,6 +530,137 @@ const CH2 = [
   ]},
 ];
 
+const CH3 = [
+{ title:"Prompting like a department head", short:"Pro prompting",
+  cards:[
+    {h:"The five parts.", p:["Role, context, task, constraints, output format. A prompt missing one of these gets a guess back. Most bad answers are missing context or format, not intelligence."]},
+    {h:"Show, don't describe.", p:["One example of the output you want beats three sentences describing it. Paste a breakdown row you like and say 'exactly this shape for every scene'."], ex:{b:"Pattern", t:"Here is one row done the way I want it:\n12 | INT. KITCHEN | D | SD3 | Nour | C2 | cream linen dress, no belt | belt removed in sc 11\nDo every scene in this shape. Don't change my column order."}},
+    {h:"Make it ask first.", p:["For anything big: 'Before you start, list what you need from me and any assumptions you're making.' It surfaces the gaps before the work, not after."]},
+    {h:"Interrogate the answer.", p:["'Where in the script is that?' 'Quote the line.' 'What are you unsure about?' Claude will tell you when it guessed, but only if you ask. Confidence is not accuracy."]},
+    {h:"Iterate in layers.", p:["First the structure, then the content, then the polish. 'Just the scene list.' 'Now add characters.' 'Now continuity.' Three short passes beat one giant prompt you have to redo."]},
+  ],
+  task:{p:"Take a real task from this week. Write a five-part prompt for it, make Claude list its assumptions first, then run it. Starter:", ex:"Role: you are my costume department coordinator on [show].\nContext: [era, number of episodes, cast size, what's already done].\nTask: [the thing].\nConstraints: [budget, deadlines, what not to touch].\nOutput: [table / list / document, columns, length].\nBefore you start, list what you need from me and the assumptions you're making."},
+  quiz:[
+    {q:"A prompt returns a vague answer. Most likely missing part?", a:["Context or output format","Politeness","A longer task description"], c:0},
+    {q:"Fastest way to get an exact output shape?", a:["Paste one example row and say 'this shape'","Describe it in a paragraph","Ask three times"], c:0},
+    {q:"'List your assumptions before you start' is useful because...", a:["Gaps show up before the work, not after","It makes Claude slower","It's polite"], c:0},
+    {q:"Claude sounds confident. That means...", a:["Nothing. Ask where it got it","It's correct","It double checked"], c:0},
+    {q:"Which is the wrong move for a big task?", a:["One giant prompt, redo if wrong","Structure first, then content, then polish","Ask for a plan first"], c:0},
+  ]},
+{ title:"The Project template", short:"Project template",
+  cards:[
+    {h:"Stop rebuilding from zero.", p:["Every show starts the same way. Write the setup once, copy it per production. Instructions, file list, naming rules, the first ten chats."]},
+    {h:"Instructions that work.", p:["Who you are. Who Claude is. Formats you always want. What to never do. Where the truth lives (the script beats the memory)."], ex:{b:"Template", t:"I'm Cynthia, costume designer. You're my department coordinator.\nShow: [name]. Era: [era]. Episodes: [n]. Cast: [list].\nAlways: tables for lists, scene numbers on everything, change numbers as C1 C2 C3, short answers.\nNever: invent a scene, change my column order, guess a measurement.\nIf the script and your memory disagree, the script wins. Say when you're unsure."}},
+    {h:"The file set.", p:["Script (latest draft, dated in the file name). Cast list with measurements. Director's deck. Your breakdown sheet link. Your budget sheet link. Nothing else. More files, slower and vaguer answers."]},
+    {h:"Naming is a system.", p:["Files: SHOW_Ep03_v4_2026-11-03.pdf. Looks: Nour_C2. Chats: 'Ep3 breakdown', 'Fittings week 2', 'Rental quotes'. Claude finds things the way you name them."]},
+    {h:"The first ten chats.", p:["Breakdown per episode. Change list per character. Budget build. Rental shortlist. Fitting schedule. Lookbook. Continuity log. Shopping lists. Wrap list. Handover. Same ten, every show."]},
+  ],
+  task:{p:"Build your template. Create a Project called TEMPLATE, paste your instructions, then ask Claude:", ex:"Review these project instructions as if you were a new coordinator on day one. What's unclear, what's missing, what would make you guess? Then rewrite them tighter."},
+  quiz:[
+    {q:"'If the script and your memory disagree, the script wins' protects against...", a:["Claude answering from an old draft","Slow answers","Long tables"], c:0},
+    {q:"How many files in a Project?", a:["Only what Claude needs, dated and named","Everything, just in case","None, paste as you go"], c:0},
+    {q:"Which file name is right?", a:["SHOW_Ep03_v4_2026-11-03.pdf","final FINAL ep3 (2).pdf","script.pdf"], c:0},
+    {q:"Why a TEMPLATE project?", a:["Copy it per show instead of rebuilding","Claude requires one","To store old shows"], c:0},
+    {q:"Which line does NOT belong in instructions?", a:["'Be creative with scene numbers'","'Tables for lists'","'Say when you're unsure'"], c:0},
+  ]},
+{ title:"Skills, for real", short:"Skills",
+  cards:[
+    {h:"What a skill actually is.", p:["A saved instruction file Claude loads when a task matches. Name, when to use it, the steps, the output format. Like a recipe card pinned in the kitchen. You write it once, it runs every time."]},
+    {h:"Anatomy of a good one.", p:[""], ex:{b:"Skill shape", t:"Name: Costume breakdown\nUse when: I give you a script or scenes and ask for a breakdown.\nSteps: 1) list scenes with set and D/N, 2) work out story days, 3) list characters per scene, 4) number changes per character, 5) flag continuity risks, 6) tell me which scenes you skipped.\nOutput: table, columns in this order: scene, set, D/N, story day, character, change, description, continuity note.\nNever: merge scenes, invent characters, change column order."}},
+    {h:"Make Claude write it.", p:["After a task went well: 'Turn what we just did into a skill. Include my column order and the checks you ran.' Then read it. Cut anything vague."]},
+    {h:"Test it on a stranger.", p:["Open a fresh chat, give it a scene it has never seen, say 'do a breakdown'. If the output isn't the shape you wanted, the skill is the problem, not Claude. Fix the skill."]},
+    {h:"Version it.", p:["Skills drift. When you change one, note what changed and why at the top. 'v3: added story days, removed the colour column.' Future you, or your assistant, will need that."]},
+  ],
+  task:{p:"Write your first real skill. Paste this and edit the result until it's exactly how you work:", ex:"Turn our costume breakdown method into a skill. Include: when to use it, the steps in order, my exact column order, the checks you run at the end, and a 'never' list. Keep it under 20 lines."},
+  quiz:[
+    {q:"A skill is...", a:["A saved instruction file loaded when a task matches","A faster Claude model","A chat with a nice name"], c:0},
+    {q:"Skill output keeps coming out wrong. Fix...", a:["The skill","Claude's mood","Your patience"], c:0},
+    {q:"How do you test a skill properly?", a:["Fresh chat, unseen material, minimal prompt","Same chat, same script","Ask Claude if it works"], c:0},
+    {q:"Which section does a skill need?", a:["When to use it","Your date of birth","A motto"], c:0},
+    {q:"Why version notes?", a:["So you and others know what changed and why","Claude demands it","It looks organised"], c:0},
+  ]},
+{ title:"Connectors and MCP, properly", short:"Connectors and MCP",
+  cards:[
+    {h:"The honest picture.", p:["MCP is a protocol: a standard way for an app to say 'here are my tools' and for Claude to call them. A connector is an MCP server with a button in Claude's settings. 'Does it have an MCP?' means 'can Claude use its tools?'"]},
+    {h:"Tools, not magic.", p:["Each connector gives Claude a short list of actions: search files, read a sheet, append a row, create an event. If the action isn't on the list, Claude can't do it, however nicely you ask. Ask: 'What can you do with my Drive connector?'"]},
+    {h:"The stack that works.", p:["Drive for files, Sheets for breakdown and budget, Calendar for fittings and returns, Higgsfield for images. One Project, four cables. Everything else is a nice-to-have."]},
+    {h:"Permissions are the whole game.", p:["Claude sees what the connector is allowed to see. Read-only when you can. Disconnect what you don't use. A connector you forgot about is still connected."]},
+    {h:"When it fails.", p:["'I can't access that' usually means: not connected, wrong account, or the file isn't shared with that account. Check those three before blaming Claude. Then reconnect."]},
+  ],
+  task:{p:"Audit your stack. In a chat with Drive, Sheets and Calendar connected, paste:", ex:"List every connector you have access to right now and the exact actions each one gives you. Then tell me which actions you'd use for: building a breakdown sheet, scheduling fittings, and finding last season's budget."},
+  quiz:[
+    {q:"MCP is best described as...", a:["A standard way for apps to offer tools to Claude","A faster internet connection","An image model"], c:0},
+    {q:"A connector gives Claude...", a:["A fixed list of actions","Full control of the app","Your password"], c:0},
+    {q:"Claude says 'I can't access that file'. First check...", a:["Connected, right account, file shared","Claude's plan","The weather"], c:0},
+    {q:"Which stack is enough for a costume department?", a:["Drive, Sheets, Calendar, Higgsfield","Every connector available","None, paste everything"], c:0},
+    {q:"Which statement is false?", a:["A connector can do anything the app can do","Permissions decide what Claude sees","Unused connectors should be disconnected"], c:0},
+  ]},
+{ title:"A design system for the department", short:"Design system",
+  cards:[
+    {h:"Why a system.", p:["Boards, decks, rail sheets, call-outs. If every one looks different, the department looks improvised. A system is a palette, two typefaces, one layout grid, one set of labels. Decided once."]},
+    {h:"Build it in Claude Design.", p:[""], ex:{b:"Say", t:"Create a design system for my costume department: a 6-colour palette (2 neutrals, 2 accents, 2 for status: fitted and returned), two typefaces (one display, one body), a card component for a look (photo, character, change number, scenes, status), and an A4 sheet layout. Save it as the system for all my boards."}},
+    {h:"Apply it everywhere.", p:["'Use my department design system' at the start of any board or deck request. Same card, same labels, same colours across the whole series. Directors notice consistency even when they can't name it."]},
+    {h:"Per-show accent.", p:["Keep the system fixed, change one accent colour per production. Same bones, different skin. The 1975 show is rust, the thriller is steel blue."]},
+    {h:"Export the pieces.", p:["Palette as hex codes for the graphics team. The look card as PNG for WhatsApp. The A4 sheet as PDF for the truck. One source, many outputs."]},
+  ],
+  task:{p:"Build the system, then apply it:", ex:"Using my department design system, make a character board for [character] with 4 looks, then an A4 rail sheet for the same character. They should look like siblings."},
+  quiz:[
+    {q:"A design system is...", a:["Palette, type, layout and components decided once","A folder of old boards","Canva templates"], c:0},
+    {q:"Status colours (fitted, returned) belong...", a:["In the palette, fixed","Chosen fresh each time","Nowhere, use text"], c:0},
+    {q:"Per show, you change...", a:["One accent colour","The whole system","The typeface only"], c:0},
+    {q:"To apply the system you say...", a:["'Use my department design system'","Nothing, it's automatic","'Make it pretty'"], c:0},
+    {q:"Palette for the graphics team is exported as...", a:["Hex codes","A photo of the screen","A description"], c:0},
+  ]},
+{ title:"Long jobs and schedules", short:"Long jobs",
+  cards:[
+    {h:"Brief it like a department.", p:["Claude can work through a multi-step job on its own: read every episode in the Project, build the full breakdown, number all changes, draft the budget, outline the lookbook. One brief, one long run. Give it what you'd give a coordinator on day one."]},
+    {h:"Plan first, always.", p:[""], ex:{b:"Say", t:"Big job. Read all 8 episodes in this Project. Plan: 1) full breakdown with story days and change numbers, 2) change list per character, 3) draft budget from the change list, 4) lookbook outline. Show me the plan and your assumptions before you start. Then do it, and give me a summary with anything you couldn't resolve."}},
+    {h:"Check in layers.", p:["Don't read 400 rows. Ask: 'How many scenes per episode? How many changes per character? Which scenes have no character listed?' Totals catch most mistakes. Spot check five rows yourself."]},
+    {h:"Scheduled tasks.", p:["Some jobs repeat. 'Every Monday morning, summarise the continuity log and list looks still not fitted.' Claude can run that on a schedule and send you the result. Set it once, read it weekly."]},
+    {h:"Know when to stop.", p:["Claude is great at the first 80 percent. The last 20, the judgement calls, the 'this actor hates wool', that's you. Let it do the drudge, keep the decisions."]},
+  ],
+  task:{p:"Run one long job on a real show:", ex:"Big job on this Project. First show me a plan and assumptions. Then: full breakdown of all episodes, change list per character, draft budget with buy/rent/make, and the totals per episode. End with a summary of anything uncertain."},
+  quiz:[
+    {q:"Before a long job, ask Claude for...", a:["A plan and its assumptions","Nothing, just go","A joke"], c:0},
+    {q:"Best way to check 400 rows?", a:["Totals and counts, then spot check five rows","Read every row","Trust it"], c:0},
+    {q:"A scheduled task is good for...", a:["A weekly continuity summary","A one-off question","Emergencies"], c:0},
+    {q:"Claude is weakest at...", a:["The judgement calls in the last 20 percent","Reading long scripts","Counting changes"], c:0},
+    {q:"Which brief is better?", a:["Steps, outputs, assumptions first, summary at the end","'Do everything for the show'","'Breakdown pls'"], c:0},
+  ]},
+{ title:"Privacy, rights and judgement", short:"Privacy and rights",
+  cards:[
+    {h:"What leaves the room.", p:["Anything you paste or upload goes to Claude's servers. Scripts under NDA, actor measurements, contracts. Not secret from Claude, and you're responsible for what you share. Read your NDA. Ask the producer. In writing."]},
+    {h:"Minimise.", p:["Change names in a script if the story is what matters. Share one scene, not the episode. Measurements as a spreadsheet without names. Same help, less exposure."]},
+    {h:"Shared links are public to whoever has them.", p:["A deck or board you share with a link can be forwarded. Treat every shared link like a PDF in an email: fine for the director, not for the group chat."]},
+    {h:"AI images and rights.", p:["Mood and silhouette, yes. A generated image as the final design you sell to a production, check first. Never generate a real actor's face without their agreement. Reference photos of people need permission too."]},
+    {h:"Credit the humans.", p:["'Designed by Cynthia, boards built with Claude' is honest and nobody minds. 'Designed by Claude' is wrong, it didn't choose the fabric. You did."]},
+  ],
+  task:{p:"Write your own rules. Paste and edit:", ex:"Draft a one-page 'AI use rules' note for my costume department: what we upload, what we never upload, how we handle actor photos and measurements, how we share boards, and how we credit. Plain language, no legal tone."},
+  quiz:[
+    {q:"Script under NDA. The right move:", a:["Ask the producer in writing before uploading","Upload, it's just a tool","Upload one episode at a time"], c:0},
+    {q:"You need help with a scene but the story is sensitive. You...", a:["Change the names, share only that scene","Share the whole script","Describe it from memory"], c:0},
+    {q:"A shared board link is...", a:["Forwardable by anyone who has it","Only visible to the director","Deleted after a day"], c:0},
+    {q:"Generating a real actor's face requires...", a:["Their agreement","Nothing, it's AI","A good prompt"], c:0},
+    {q:"Honest credit line?", a:["Designed by Cynthia, boards built with Claude","Designed by Claude","No credit needed"], c:0},
+  ]},
+{ title:"Teach your assistant", short:"Hand it over",
+  cards:[
+    {h:"The system is only yours until you're sick.", p:["If the breakdown lives in your head and your chats, the department stops when you do. The goal of Course 3: anyone on your team can run the hive."]},
+    {h:"The handover kit.", p:["Project template. Skills list. Naming rules. The ten standard chats. The AI use rules. Where the sheets live. One document, two pages, in the Project."], ex:{b:"Say", t:"Write a two-page handover document for a new wardrobe assistant: how our Project is set up, the skills we use and when, naming rules, the standard chats in order, and our AI use rules. Plain, numbered, no fluff."}},
+    {h:"Onboard in an hour.", p:["Sit with them. One real episode. They run the breakdown skill, you watch. They build the rail sheet, you watch. Then they're on their own and you review totals."]},
+    {h:"Review, don't redo.", p:["When their output is off, fix the skill or the template, not the output. Every correction that goes into the system is a correction you never make again."]},
+    {h:"You run the hive now.", p:["Three courses. From 'what is Claude' to a department that runs on a system you designed. The bees were never the point. You were."]},
+  ],
+  task:{p:"Make the kit real:", ex:"Build my handover kit in this Project: the two-page handover document, a checklist for a new assistant's first day, and a list of the five mistakes they're most likely to make with our system and how to avoid each."},
+  quiz:[
+    {q:"The point of a handover kit:", a:["The department runs without you","Looking organised","Claude requires it"], c:0},
+    {q:"Assistant's output is wrong. You fix...", a:["The skill or template","Their output, every time","Nothing, it's AI"], c:0},
+    {q:"Onboarding should take...", a:["About an hour with one real episode","A week of reading","A video course"], c:0},
+    {q:"Where does the handover doc live?", a:["In the Project, with everything else","On your phone","In a group chat"], c:0},
+    {q:"What did three courses actually build?", a:["A system the department runs on","A list of prompts","A dependency on Claude"], c:0},
+  ]},
+];
+
 /* ---------- bee drawing ---------- */
 function bee(mood, id){
   mood = mood || 'happy';
@@ -575,6 +706,9 @@ const COURSES = [
   { n:2, name:'The Working Hive', cells:CH2, hello:"Round two. Real work, harder quizzes, more honey. Design first, budget last.",
     cert:{title:'is officially Head of Wardrobe of the Hive', lines:['for completing Course 2, The Working Hive:','8 cells of real work, 32 questions, still no bees harmed.']},
     queen:{h:'Double crown!', p:'Course 2 done. You run a production with Claude now. The hive is proud.'} },
+  { n:3, name:"The Queen's Workshop", cells:CH3, hello:"Course 3. No more training wheels. Systems, skills, handover. By the end, the hive runs without you.",
+    cert:{title:'is officially Master of the Hive', lines:["for completing Course 3, The Queen's Workshop:",'a department that runs on a system she designed.']},
+    queen:{h:'Master of the Hive.', p:'Three courses. From hello to a system of your own. Nothing left to teach you here.'} },
 ];
 let cc = 1; // current course number
 const course = ()=>COURSES[cc-1];
@@ -583,10 +717,10 @@ const N = ()=>CHc().length;
 
 /* ---------- state ---------- */
 const KEY='cynthia-hive-v3';
-let state={courses:{1:{done:[]},2:{done:[]}},honey:0,sound:true,certs:[]};
+let state={courses:{1:{done:[]},2:{done:[]},3:{done:[]}},honey:0,sound:true,certs:[]};
 try{
   const s=localStorage.getItem(KEY);
-  if(s){ state=Object.assign(state,JSON.parse(s)); }
+  if(s){ state=Object.assign(state,JSON.parse(s)); if(!state.courses[3]) state.courses[3]={done:[]}; }
   else { // migrate from v2
     const old=localStorage.getItem('cynthia-hive-v2');
     if(old){ const o=JSON.parse(old); state.honey=o.honey||0; state.sound=o.sound!==false; state.courses[1].done=o.done||[];
@@ -872,7 +1006,7 @@ $('sound').onclick=()=>{ state.sound=!state.sound; save(); soundLabel(); if(stat
 $('reset').onclick=()=>{ if(!doneList().length){toast('Nothing to reset in this course');return;} state.courses[cc].done=[]; save(); setCourse(cc); toast('Fresh honeycomb for Course '+cc); };
 window.addEventListener('resize',()=>{ if($('home').classList.contains('on')) layoutComb(); });
 soundLabel();
-setCourse(courseDone(1)&&courseOpen(2)&&!courseDone(2) ? 2 : 1);
+setCourse([3,2,1].find(n=>courseOpen(n)&&!courseDone(n)) || COURSES.length);
 </script>
 </body>
 </html>
