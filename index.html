@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cynthia and the Hive</title>
-<meta name="description" content="Learn Claude, one honeycomb cell at a time. Two courses, one bee.">
+<meta name="description" content="Learn Claude, one honeycomb cell at a time. Four courses, one bee.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cynthia and the Hive">
-<meta property="og:description" content="Learn Claude, one honeycomb cell at a time. Two courses, one bee.">
+<meta property="og:description" content="Learn Claude, one honeycomb cell at a time. Four courses, one bee.">
 <meta property="og:url" content="https://cynthia-hive.vercel.app/">
 <meta property="og:image" content="https://cynthia-hive.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
@@ -667,6 +667,137 @@ const CH3 = [
   ]},
 ];
 
+const CH4 = [
+{ title:"The canvas", short:"The canvas",
+  cards:[
+    {h:"What opens next to the chat.", p:["Claude Design is a canvas: an endless white table with your designs laid on it. Each design is an artboard, a framed rectangle with a name strip above it. Pinch to zoom, drag to pan, tap an artboard to work on it."]},
+    {h:"Artboards are the unit.", p:["One board, one poster, one A4 sheet, one phone screen: each is an artboard. Ask for three options and you get three artboards side by side. Nothing is lost, you compare."]},
+    {h:"Pages keep it tidy.", p:["A canvas can have pages, like tabs. One page per character, or per episode. Say 'put the fittings boards on a new page called Week 2'."]},
+    {h:"Focus and play.", p:["Open one artboard full screen to present it. Boards with working buttons get a Play mode. For now: tap in, look, tap out."]},
+    {h:"Where things are.", p:["Share and Export at the top. Tweaks button on an artboard. Properties panel when you tap an element. The chat stays on the side: that's where you ask for changes."]},
+  ],
+  task:{p:"Open a canvas and get your bearings. Paste this in Claude:", ex:"In Claude Design, make three small artboards side by side: a colour swatch card, a text card with my name, and a photo placeholder. Name them A, B and C."},
+  quiz:[
+    {q:"An artboard is...", a:["One framed design on the canvas","The whole canvas","A chat message"], c:0},
+    {q:"You asked for three options. They arrive as...", a:["Three artboards side by side","One board, three times","A PDF"], c:0},
+    {q:"Pages are for...", a:["Grouping artboards, like tabs","Printing","Zooming"], c:0},
+    {q:"Where do you ask for changes?", a:["The chat beside the canvas","An email to Claude","Inside the artboard's text"], c:0},
+    {q:"Which is false?", a:["Zooming the canvas changes the export size","You can pan and pinch-zoom the canvas","Each artboard has a name strip"], c:0},
+  ]},
+{ title:"Talking to the canvas", short:"Talking to it",
+  cards:[
+    {h:"Point, then speak.", p:["Tap an artboard first, then say 'this one'. Claude edits what you selected. Say nothing about which, and it may change all of them."]},
+    {h:"Scope words.", p:["'This artboard.' 'All artboards.' 'Only the title.' 'Everything except the photos.' One scope word saves one redo."], ex:{b:"Say", t:"On this artboard only: make the title 20 percent bigger and swap the rust for terracotta. Don't touch the photos."}},
+    {h:"Design words Claude understands.", p:["Margin, padding, grid, alignment, hierarchy, contrast, whitespace, weight. You don't need to know code. You need to say what you see."]},
+    {h:"Ask for options, not perfection.", p:["'Give me three versions of this board: calm, bold, editorial.' Then pick. Picking is faster than describing."]},
+    {h:"Undo is a sentence.", p:["'Go back to the previous version of this board.' 'Keep the layout, restore the old colours.' Nothing is destroyed, everything is a version."]},
+  ],
+  task:{p:"Make one board, then change it with scope words only:", ex:"Make a title card for [show]. Then: on this artboard, make the title bigger. Then: all artboards, change the background to warm white. Then: give me two more versions, calm and bold."},
+  quiz:[
+    {q:"You want one board changed, not all. You...", a:["Tap it and say 'this artboard'","Say 'change it'","Close the others"], c:0},
+    {q:"'Don't touch the photos' is...", a:["A scope instruction that prevents a redo","Rude","Ignored"], c:0},
+    {q:"Fastest route to a good board?", a:["Three versions, then pick","One perfect prompt","Twenty small edits"], c:0},
+    {q:"You preferred the earlier version. You say...", a:["'Go back to the previous version of this board'","Nothing, it's gone","Start a new canvas"], c:0},
+    {q:"Which word does Claude NOT need from you?", a:["CSS","Margin","Contrast"], c:0},
+  ]},
+{ title:"Boards done properly", short:"Boards",
+  cards:[
+    {h:"Mood board anatomy.", p:["Title, one line of intent, 6 to 9 images, a palette strip, three texture words. No paragraphs. A mood board that needs reading is a document."]},
+    {h:"Photos first.", p:["Upload your references before you ask. Claude places what you give it. Ask without photos and you get placeholders, which is fine for layout, useless for mood."]},
+    {h:"The palette strip.", p:[""], ex:{b:"Say", t:"Add a palette strip at the bottom: 5 swatches pulled from the photos, each with a name and hex code. Neutrals left, accents right."}},
+    {h:"Character boards.", p:["Same skeleton every time: name, era line, looks in a grid with C1 to C4, scene numbers under each, palette strip. Consistency is what makes it look designed."]},
+    {h:"Bigger photos, less text.", p:["If you have to choose, choose the image. Say 'less text, bigger photos' and watch the board breathe."]},
+  ],
+  task:{p:"Upload 6 to 9 references and paste:", ex:"Mood board for [show], [era], [tone]. Title, one line of intent, my photos in a clean grid, a 5-swatch palette pulled from the photos with names and hex codes, three texture words. White background, little text."},
+  quiz:[
+    {q:"How many images on a mood board?", a:["6 to 9","2","25"], c:0},
+    {q:"You asked for a mood board without uploading photos. You get...", a:["Placeholders","Your photos from Drive","An error"], c:0},
+    {q:"Palette swatches should carry...", a:["Name and hex code","Only a name","Nothing"], c:0},
+    {q:"What makes character boards look designed?", a:["The same skeleton every time","Different fonts per character","More text"], c:0},
+    {q:"Text or image, when you must choose?", a:["Image","Text","Both, smaller"], c:0},
+  ]},
+{ title:"Print and PDF", short:"Print",
+  cards:[
+    {h:"Say the paper.", p:["'A4 portrait' or 'A4 landscape'. Claude sizes the artboard to the sheet. Without it, you get a screen-shaped board that prints with awkward margins."]},
+    {h:"Margins and bleed.", p:["Ask for 15 mm margins. Printers cut edges. Nothing important closer than that to the edge: no names, no scene numbers."]},
+    {h:"Text size on paper.", p:["12 pt body minimum, 9 pt for labels, never smaller. On an iPad everything looks readable. On the truck wall at arm's length it isn't."]},
+    {h:"Multi-page sheets.", p:["One character per page. Say 'one A4 page per character, same layout, flowing as one PDF'. Export once, print once."]},
+    {h:"Export and check.", p:["Export as PDF from the top of the canvas. Open the PDF before printing. Check: nothing cut, text readable at arm's length, photos not blurry."]},
+  ],
+  task:{p:"Make the rail sheet:", ex:"A4 portrait rail sheet for [character]: name big at the top, 4 looks in a 2 by 2 grid, change number and scenes under each, 15 mm margins, body text 12 pt. Then one page per character for [names], same layout, exported as one PDF."},
+  quiz:[
+    {q:"For a printed sheet, the first thing to say:", a:["A4 portrait or landscape","Make it pretty","Big"], c:0},
+    {q:"Minimum margin for print?", a:["About 15 mm","0","5 cm"], c:0},
+    {q:"Smallest label size on paper?", a:["9 pt","5 pt","Any, it's fine"], c:0},
+    {q:"Five characters, five sheets. Best ask?", a:["One page per character, same layout, one PDF","Five separate canvases","Screenshots"], c:0},
+    {q:"Before printing you...", a:["Open the PDF and check edges and text","Print and see","Ask Claude if it's fine"], c:0},
+  ]},
+{ title:"Panel and Tweaks", short:"Panel and Tweaks",
+  cards:[
+    {h:"Hands on.", p:["Tap any element on an artboard. A properties panel appears: size, colour, spacing, font. Change it there. No chat needed for small things."]},
+    {h:"Retype in place.", p:["Tap text, type. A wrong scene number, a typo in a name: fix it yourself in two seconds. Claude won't be offended."]},
+    {h:"Tweaks.", p:["Some boards have a Tweaks button: levers Claude made for you. An accent colour, a density switch, a variant. Ask for them: 'add a tweak for the accent colour so I can try options'."]},
+    {h:"Drag and rearrange.", p:["You can drag an item out of a group, or wrap items in a row or grid from the toolbar. If it fights you, ask Claude to do it. Both ways are fine."]},
+    {h:"When to use which.", p:["Panel: one element, one value. Chat: anything across the whole board or all boards. Tweaks: the levers you keep coming back to."]},
+  ],
+  task:{p:"Make a board, then edit it three ways:", ex:"Make a character board for [character] with an accent colour tweak. Then I'll: fix one text by tapping it, change one colour in the panel, and try two accents with the tweak."},
+  quiz:[
+    {q:"A typo in a name on the board. Fastest fix?", a:["Tap the text and retype it","Ask Claude in chat","Export and fix in Photoshop"], c:0},
+    {q:"The properties panel edits...", a:["One element's size, colour, spacing, font","The whole canvas","The chat"], c:0},
+    {q:"A Tweak is...", a:["A lever Claude made, like an accent colour","A typo","A new page"], c:0},
+    {q:"Change across all boards. Use...", a:["The chat","The panel, board by board","Tweaks"], c:0},
+    {q:"Which is false?", a:["Hand edits break the board for Claude","You can drag items out of a group","You can retype text in place"], c:0},
+  ]},
+{ title:"Your design system", short:"Design system",
+  cards:[
+    {h:"Decide once.", p:["Palette, two typefaces, spacing, corner radius, the look card. Saved as a design system. Every new canvas can use it."]},
+    {h:"Build it with Claude.", p:[""], ex:{b:"Say", t:"Create a design system called Cynthia Wardrobe: 2 neutrals, 2 accents, 2 status colours (fitted, returned), Fredoka for titles, Nunito for body, 8 px spacing, 16 px corners, and a look card component: photo, character, change number, scenes, status."}},
+    {h:"Make it the default.", p:["Ask Claude to use it on every design, or name it at the start: 'use Cynthia Wardrobe'. Boards, sheets, decks, all matching, without you repeating colours."]},
+    {h:"Per show, one accent.", p:["Keep the system, swap one accent per production. 'Use Cynthia Wardrobe with accent rust for this show.' Same bones, new skin."]},
+    {h:"Share it.", p:["A design system is a canvas too. Share the link with the graphics department or your assistant. They build in your style without asking you what the orange is."]},
+  ],
+  task:{p:"Build the system, then test it:", ex:"Create a design system called Cynthia Wardrobe as described. Then make a new mood board and a rail sheet using it. They should look like siblings without me saying any colour."},
+  quiz:[
+    {q:"A design system saves...", a:["Palette, type, spacing, components, decided once","Your photos","Your chats"], c:0},
+    {q:"To use it on a new canvas you say...", a:["'Use Cynthia Wardrobe'","Nothing, it's automatic forever","The hex codes again"], c:0},
+    {q:"New show, same system. You change...", a:["One accent colour","The typefaces","Everything"], c:0},
+    {q:"Status colours live...", a:["In the system, fixed","In each board, fresh","Nowhere"], c:0},
+    {q:"Your assistant needs the colours. You...", a:["Share the design system link","Screenshot the palette","Describe it on WhatsApp"], c:0},
+  ]},
+{ title:"Present and share", short:"Present",
+  cards:[
+    {h:"Link the boards.", p:["'Link the title card to the character boards, one button each.' Now it's a clickable walkthrough. Play mode runs it full screen on the iPad."]},
+    {h:"Present from the canvas.", p:["Open the first board full screen, tap through. No export, no PowerPoint, no cable. The director taps too."]},
+    {h:"Share a link.", p:["Share from the top of the canvas. The director opens it in a browser. Remember: a link can be forwarded. Share what you'd be fine seeing in the group chat."]},
+    {h:"Comments.", p:["People can leave comments on the canvas. 'Nour C2 too bright.' You read them in the morning, fix them with the panel or the chat, done."]},
+    {h:"Send it elsewhere.", p:["Need it in Canva or as a PowerPoint? Export, or use Send to when it's offered. The canvas stays the source of truth."]},
+  ],
+  task:{p:"Turn your boards into a walkthrough:", ex:"Link the title card to each character board with a button, and each character board back to the title. Then share a view link with me and leave one comment on any board."},
+  quiz:[
+    {q:"A clickable walkthrough is made by...", a:["Linking artboards with buttons","Exporting to video","Screenshots in order"], c:0},
+    {q:"Presenting to the director in the room. Easiest?", a:["Full screen on the iPad, tap through","Export to PowerPoint first","Print everything"], c:0},
+    {q:"A shared link...", a:["Can be forwarded by anyone who has it","Expires in an hour","Is private to one person"], c:0},
+    {q:"Director's notes arrive as...", a:["Comments on the canvas","A fax","A new canvas"], c:0},
+    {q:"Need the deck in Canva. You...", a:["Export or Send to, canvas stays the source","Rebuild it in Canva","Screenshot each board"], c:0},
+  ]},
+{ title:"Three sizes, one design", short:"Three sizes",
+  cards:[
+    {h:"Where it will live decides the size.", p:["WhatsApp: square or 4 by 5. Instagram story: 9 by 16. Email header: wide. A4: paper. Say the destination and Claude sizes the artboard."]},
+    {h:"One design, three artboards.", p:[""], ex:{b:"Say", t:"Make this look announcement in three sizes: square 1080, story 1080 by 1920, and A4 landscape. Same content, same style, laid out for each."}},
+    {h:"What moves, what stays.", p:["Title and photo stay. Layout moves. Stacked on story, side by side on wide. If the text won't fit, shorten the text, don't shrink the font."]},
+    {h:"PNG for messages, PDF for print.", p:["Export PNG for WhatsApp and Instagram. PDF for anything that gets printed or emailed as a document. Never a screenshot: blurry edges, wrong size."]},
+    {h:"You're the art director now.", p:["Four courses. Canvas, boards, print, system, presenting, sizes. The department has a look, and it's yours."]},
+  ],
+  task:{p:"Final task:", ex:"Make the Course 4 graduation card for Cynthia using Cynthia Wardrobe: a bee, her name, 'Art Director of the Hive', in square, story and A4 landscape. Export the square as PNG."},
+  quiz:[
+    {q:"Instagram story size?", a:["1080 by 1920","1080 by 1080","A4"], c:0},
+    {q:"Text won't fit on the story size. You...", a:["Shorten the text","Shrink the font to 6 pt","Delete the photo"], c:0},
+    {q:"Export for WhatsApp:", a:["PNG","PDF","Screenshot"], c:0},
+    {q:"Three sizes of one design means...", a:["Three artboards, same content and style","Three canvases","One board stretched"], c:0},
+    {q:"Which is false?", a:["A screenshot is as good as an export","PDF is right for print","Say the destination and Claude sizes the board"], c:0},
+  ]},
+];
+
 /* ---------- bee drawing ---------- */
 function bee(mood, id){
   mood = mood || 'happy';
@@ -715,6 +846,9 @@ const COURSES = [
   { n:3, name:"The Queen's Workshop", cells:CH3, hello:"Course 3. No more training wheels. Systems, skills, handover. By the end, the hive runs without you.",
     cert:{title:'is officially Master of the Hive', lines:["for completing Course 3, The Queen's Workshop:",'a department that runs on a system she designed.']},
     queen:{h:'Master of the Hive.', p:'Three courses. From hello to a system of your own. Nothing left to teach you here.'} },
+  { n:4, name:'The Design Hive', cells:CH4, hello:"Course 4. Claude Design, end to end: canvas, boards, print, your own system, presenting, three sizes of everything.",
+    cert:{title:'is officially Art Director of the Hive', lines:['for completing Course 4, The Design Hive:','canvas, boards, print, system, presenting. Her look, her rules.']},
+    queen:{h:'Art Director of the Hive.', p:'Course 4 done. The department has a look now, and it is yours.'} },
 ];
 let cc = 1; // current course number
 const course = ()=>COURSES[cc-1];
@@ -723,10 +857,10 @@ const N = ()=>CHc().length;
 
 /* ---------- state ---------- */
 const KEY='cynthia-hive-v3';
-let state={courses:{1:{done:[]},2:{done:[]},3:{done:[]}},honey:0,sound:true,certs:[]};
+let state={courses:{1:{done:[]},2:{done:[]},3:{done:[]},4:{done:[]}},honey:0,sound:true,certs:[]};
 try{
   const s=localStorage.getItem(KEY);
-  if(s){ state=Object.assign(state,JSON.parse(s)); if(!state.courses[3]) state.courses[3]={done:[]}; }
+  if(s){ state=Object.assign(state,JSON.parse(s)); if(!state.courses[3]) state.courses[3]={done:[]}; if(!state.courses[4]) state.courses[4]={done:[]}; }
   else { // migrate from v2
     const old=localStorage.getItem('cynthia-hive-v2');
     if(old){ const o=JSON.parse(old); state.honey=o.honey||0; state.sound=o.sound!==false; state.courses[1].done=o.done||[];
@@ -1012,7 +1146,7 @@ $('sound').onclick=()=>{ state.sound=!state.sound; save(); soundLabel(); if(stat
 $('reset').onclick=()=>{ if(!doneList().length){toast('Nothing to reset in this course');return;} state.courses[cc].done=[]; save(); setCourse(cc); toast('Fresh honeycomb for Course '+cc); };
 window.addEventListener('resize',()=>{ if($('home').classList.contains('on')) layoutComb(); });
 soundLabel();
-setCourse([3,2,1].find(n=>courseOpen(n)&&!courseDone(n)) || COURSES.length);
+setCourse([4,3,2,1].find(n=>courseOpen(n)&&!courseDone(n)) || COURSES.length);
 </script>
 </body>
 </html>
